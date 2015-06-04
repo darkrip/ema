@@ -21,7 +21,6 @@ class Command
 };
 
 
-
 class Packer
 {
 public:
@@ -62,10 +61,6 @@ private:
 	Command m_deleteCommand;
 	Command m_addCommand;
 	Command m_moveCommand;
-	
-	
-
-
 };
 
 
@@ -96,7 +91,27 @@ public:
 class FileCache
 {
 public:
+	FileName GetName()const;
+private:
+	typedef std::vector<FileCache*> Childs;
 
+	enum StatusLoad
+	{
+		StatusEmpty, // Only Name and IsFolder
+		StatusAttr,
+		StatusData
+
+		StatusInMemory, 
+		StatusInCache
+	};
+
+	PackRef m_Pack;
+	Status  m_Status;
+	Childs  m_Childs;
+
+	
+	
+	
 };
 
 

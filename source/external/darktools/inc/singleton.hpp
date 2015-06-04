@@ -8,7 +8,7 @@ namespace tools
 {
 
 template<class T>
-class Singleton
+class AutoSingleton
 {
 public:
 	static T& getInstance()
@@ -17,6 +17,25 @@ public:
 		return tmp;
 	}
 };
+
+
+
+template<class T>
+class ManualSingleton
+{
+public:
+	static T& getInstance()
+	{
+		static T tmp;
+		return tmp;
+	}
+protected:
+	static void create();
+	static void destroy();
+};
+
+
+
 
 
 }
