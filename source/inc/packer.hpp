@@ -7,6 +7,8 @@ namespace pack
 {
 
 typedef std::iowstream PackDataStream;
+typedef std::owstream PackDataReadStream;
+typedef std::iwstream PackDataWriteStream;
 typedef std::wstring FileName;
 
 
@@ -21,14 +23,24 @@ class Command
 };
 
 
-class Packer
+
+class PackerBase
 {
 public:
-	Packer(const std::wstring& packerName);
+	virtual bool isCorrectFile(const FileName&, PackDataStream&);
+	virtual PackFileRef open(const FileName&, PackDataStream&);
+	virtual void Upgrade(FileCache& file, FileCache::State newState, bool readOnly=true);
+};
+
+
+
+
+class CustomPacker
+{
+public:
+	CustomPacker(const std::wstring& packerName);
 
 	void addExtension(const FileName&);
-	
-	
 	
 	
 private:
@@ -83,7 +95,8 @@ class PackManager
 class Pack
 {
 public:
-
+	FileName getPackName()const;
+	FileCache& getRoot();
 };
 
 
@@ -91,27 +104,46 @@ public:
 class FileCache
 {
 public:
-	FileName GetName()const;
+	FileName getName()const;
+	bool     isFolder()const;
+	
+	FileAttr& getAttr();
+	FileName getExtractedName();
+	
+	void setAutoUpgrade();
+	bool isAutoUpgrade()const;
+	
+	void markDeleted();
+	bool isDeleted()const;
+	
+	PackDataReadStream&  getReadDataStream();
+	PackDataWriteStream& getWriteDataStream();	
+	
+	
+protected:
+	bool isDirty()const;
+	void setDirty();	
+	void clearDirty();
 private:
 	typedef std::vector<FileCache*> Childs;
 
-	enum StatusLoad
+	enum LoadStatus
 	{
-		StatusEmpty, // Only Name and IsFolder
-		StatusAttr,
-		StatusData
-
-		StatusInMemory, 
-		StatusInCache
+		StatusLoadEmpty, // Only Name and IsFolder
+		StatusLoadAttrOnly,
+		StatusLoadStream, 
+		StatusLoadInFile,
+		StatusMAX
 	};
 
-	PackRef m_Pack;
-	Status  m_Status;
-	Childs  m_Childs;
-
+	PackRef  		m_pack;
+	FileCacheRef	m_parent;
+	FileName 		m_name;
 	
+	Status  		m_status;
 	
-	
+	bool	 		m_isFolder;
+	Childs  		m_childs;
 };
 
 
