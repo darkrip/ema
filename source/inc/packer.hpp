@@ -1,16 +1,11 @@
 #ifndef __EMA_PACKER_HPP__
 #define __EMA_PACKER_HPP__
 
+
 namespace ema
 {
 namespace pack
 {
-
-typedef std::iowstream PackDataStream;
-typedef std::owstream PackDataReadStream;
-typedef std::iwstream PackDataWriteStream;
-typedef std::wstring FileName;
-
 
 class VariablesList
 {
@@ -97,6 +92,7 @@ class Pack
 public:
 	FileName getPackName()const;
 	FileCache& getRoot();
+	Packer::Ref getPacker();
 };
 
 

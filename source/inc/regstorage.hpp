@@ -1,7 +1,7 @@
 #ifndef __EMA_PACKER_HPP__
 #define __EMA_PACKER_HPP__
 
-#include "hdtools/singleton.hpp"
+#include "singleton.hpp"
 
 
 namespace ema
