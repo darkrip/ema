@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ema.packs.test", "ema.packs.test\ema.packs.test.vcxproj", "{04E6F1A8-E4CA-451C-8ED4-56E234AEACC7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ema.inireader.test", "ema.inireader.test\ema.inireader.test.vcxproj", "{1FECD7A0-3266-4AE4-A08A-15834C51636C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +17,10 @@ Global
 		{04E6F1A8-E4CA-451C-8ED4-56E234AEACC7}.Debug|Win32.Build.0 = Debug|Win32
 		{04E6F1A8-E4CA-451C-8ED4-56E234AEACC7}.Release|Win32.ActiveCfg = Release|Win32
 		{04E6F1A8-E4CA-451C-8ED4-56E234AEACC7}.Release|Win32.Build.0 = Release|Win32
+		{1FECD7A0-3266-4AE4-A08A-15834C51636C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1FECD7A0-3266-4AE4-A08A-15834C51636C}.Debug|Win32.Build.0 = Debug|Win32
+		{1FECD7A0-3266-4AE4-A08A-15834C51636C}.Release|Win32.ActiveCfg = Release|Win32
+		{1FECD7A0-3266-4AE4-A08A-15834C51636C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
