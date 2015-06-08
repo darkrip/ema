@@ -15,7 +15,7 @@ IniParser::IniParser(const FileName& fileName) : m_fileName(fileName)
 void IniParser::reload()
 {
 	m_sections.clear();
-	std::wfstream iniFile(m_fileName, std::fstream::in);
+	std::fstream iniFile(m_fileName, std::fstream::in);
 	detectEncoding(iniFile);
 	parseStream(iniFile);
 }
@@ -23,15 +23,63 @@ void IniParser::reload()
 
 
 
-void IniParser::parseStream(std::wostream& iniFile)
+void IniParser::parseStream(std::istream& iniFile)
 {
 	Parser parser(*this);
 	while (!iniFile.eof())
 	{
-		std::wstring line = LoadString(iniFile);
+		std::wstring line = loadString(iniFile);
 		parser.parseLine(line);
 	}
 }
+
+
+void IniParser::detectEncoding(std::istream& iniFile)
+{
+	unsigned char bomUTF8[] ={0xEF, 0xBB, 0xBF};
+	unsigned char bomUTF16[]={0xFE, 0xFF};
+	unsigned char bomBuffer[3];
+
+
+	iniFile>>bomBuffer;
+}
+
+
+std::wstring IniParser::loadString(std::istream&)
+{
+	return L"";
+}
+
+
+std::wstring IniParser::getString(SectionIndex index, KeyNameRef name, const std::wstring &defValue)
+{
+	if(index==wrongIndex || index>=sectionCount())
+		return defValue;
+	else
+	{
+		auto keyIt = m_sections.get<0>()[index].m_keys.get<1>().find(name);
+		if(keyIt!=m_sections.get<0>()[index].m_keys.get<1>().end())
+			return keyIt->m_value;
+		else
+			return defValue;
+	}
+}
+
+std::wstring IniParser::getString(SectionNameRef section_name, KeyNameRef key_name, const std::wstring &defValue)
+{
+	auto sectionIt = m_sections.get<1>().find(section_name);
+	if(sectionIt==m_sections.get<1>().end())
+		return defValue;
+	else
+	{
+		auto keyIt = sectionIt->m_keys.get<1>().find(key_name);
+		if(keyIt!=sectionIt->m_keys.get<1>().end())
+			return keyIt->m_value;
+		else
+			return defValue;
+	}
+}
+
 
 
 IniParser::Parser::Parser(IniParser& owner) : m_owner(owner)
@@ -87,6 +135,7 @@ IniParser::Parser::~Parser()
 	pushKey();
 	pushSection();
 }
+
 
 
 void IniParser::Parser::parseLine(const std::wstring& line)

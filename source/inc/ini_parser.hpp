@@ -41,7 +41,7 @@ public:
 	IniParser(const FileName&);
 
 	SectionIndex getSectionIndex(SectionNameRef name)const;
-	SectionIndex sectionCount()const;
+	SectionIndex sectionCount()const{ return m_sections.size(); }
 	SectionName getSectionName(SectionIndex index)const;
 	void createSection(SectionNameRef, SectionIndex index = wrongIndex);
 	void deleteSection(SectionIndex);
@@ -119,9 +119,9 @@ private:
 	friend class Parser;
 
 
-	void detectEncoding(std::wostream& iniFile);
-	void parseStream(std::wostream& iniFile);
-	std::wstring LoadString(std::wostream&);
+	void detectEncoding(std::istream& iniFile);
+	void parseStream(std::istream& iniFile);
+	std::wstring loadString(std::istream&);
 
 
 	std::locale m_iniFileLocale;
