@@ -40,6 +40,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(SolutionDir)..\..\source\external\boost;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\..\source\external\boost\stage\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <OutDir>$(SolutionDir)..\..\output\tests\</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2013\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\..\output\tests</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2013</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -50,6 +57,12 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)" mkdir "$(SolutionDir)..\..\output\tests\$(ProjectName)"</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Create test folder</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

@@ -1,0 +1,1 @@
+echo 1%1 2%2 3%3 >> extract_command.log

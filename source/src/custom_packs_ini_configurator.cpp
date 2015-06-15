@@ -2,4 +2,16 @@
 
 
 
-#include "ini_parser.hpp"
+
+
+using namespace ema;
+using namespace config;
+
+
+CustomPackerIniConfigurator::CustomPackerIniConfigurator(const FileName& inifilename):
+	m_iniParser(inifilename)
+{
+
+	
+
+}

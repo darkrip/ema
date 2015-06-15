@@ -3,6 +3,8 @@
 
 
 #include "defs.hpp"
+#include "custom_packer_factory.hpp"
+#include "ini_parser.hpp"
 
 
 namespace ema
@@ -13,10 +15,12 @@ namespace config
 
 
 
-class CustomPackerIniConfigurator
+class CustomPackerIniConfigurator : public ema::pack::CustomPackerFactoryBase
 {
 public:
 	CustomPackerIniConfigurator(const FileName& inifilename);
+private:
+	IniParser m_iniParser;
 };
 
 

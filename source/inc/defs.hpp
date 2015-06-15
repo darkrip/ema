@@ -6,11 +6,12 @@
 
 namespace ema
 {
-
-typedef std::wstring FileName;
-typedef std::wiostream PackDataStream;
-typedef std::wostream PackDataReadStream;
-typedef std::wistream PackDataWriteStream;
+typedef std::wstring	 String;
+typedef const String&	 StringRef;
+typedef String			 FileName;
+typedef std::wiostream   PackDataStream;
+typedef std::wostream    PackDataReadStream;
+typedef std::wistream    PackDataWriteStream;
 
 }
 

@@ -15,7 +15,7 @@
 
 
 
-bool test_ini(int id, const std::locale& locale, const std::wstring& multibyte_example, bool linux_like_line_ending,  bool error1, bool error2, bool error3, bool error4)
+bool test_ini(int id, const std::string& locale, const std::wstring& multibyte_example, bool linux_like_line_ending,  bool error1, bool error2, bool error3, bool error4)
 {
 	
 	std::wstring cendl = linux_like_line_ending ? L"\n" : L"\r\n";
@@ -39,28 +39,44 @@ bool test_ini(int id, const std::locale& locale, const std::wstring& multibyte_e
 
 	*/
 
-	std::wstring file_name = std::wstring(L"ini_test") + std::to_wstring(id);
+	std::wstring file_name = std::wstring(L"ini_test") + std::to_wstring(id) + std::wstring(L".ini");
 	{
-		std::wfstream file(file_name, std::wfstream::out | std::wfstream::trunc);
+		std::wstringstream out;
 
-		file.imbue(locale);
-
-		file << cendl;
-		file << L";comment1"  << cendl;
+		out << cendl;
+		out << L";comment1" << cendl;
 		if(error1)
-			file << L"key1="  << multibyte_example<< cendl;
-		file << L"[section1"  << (error2 ? L"" : L"]")  << cendl;
-		file << L";comment2"  << cendl;
-		file << cendl;
-		file << L"key1=value1"<< cendl;
-		file << L"key2  "     << (error4 ? L"" : L"=") << multibyte_example<< cendl;
-		file << cendl;
-		file << L";comment3"  << cendl;
-		file << L"[section2]" << (error3 ? L"w" : L"")  << cendl;
-		file << L"key1=value3"<< cendl;
-		file << L"key2=key2"  << multibyte_example << cendl;
-		file << L";comment4"  << multibyte_example << cendl;
-		file << cendl;
+			out << L"key1=" << multibyte_example << cendl;
+		out << L"[section1" << (error2 ? L"" : L"]") << cendl;
+		out << L";comment2" << cendl;
+		out << cendl;
+		out << L"key1=value1" << cendl;
+		out << L"key2  " << (error4 ? L"" : L"=") << multibyte_example << cendl;
+		out << cendl;
+		out << L";comment3" << cendl;
+		out << L"[section2]" << (error3 ? L"w" : L"") << cendl;
+		out << L"key1=value3" << cendl;
+		out << L"key2=key2" << multibyte_example << cendl;
+		out << L";comment4" << multibyte_example << cendl;
+		out << cendl;
+		
+		std::string str;
+		if (locale == "UTF-16")
+		{
+			std::fstream file(file_name, std::fstream::out | std::fstream::trunc | std::fstream::binary);
+			file.write((char*)out.str().c_str(), out.str().length()*sizeof(out.str()[0]));
+		}
+		else
+		{
+			str = boost::locale::conv::from_utf(out.str(), locale);
+			if (locale == "UTF-8")
+			{
+				char bom[] = { (char)0xEF, (char)0xBB, (char)0xBF, 0 };
+				str = std::string(bom) + str;
+			}
+			std::fstream file(file_name, std::wfstream::out | std::wfstream::trunc);
+			file << str;
+		}
 	}
 
 
@@ -99,7 +115,7 @@ bool test_ini(int id, const std::locale& locale, const std::wstring& multibyte_e
 
 struct TestConfig
 {
-	std::locale locale;
+	std::string locale;
 	std::wstring multibyte_example;
 	bool linux_like_line_ending;
 	bool key_without_section;
@@ -112,12 +128,12 @@ int run_test(int id, const TestConfig& config)
 {
 	if (test_ini(id, config.locale, config.multibyte_example, config.linux_like_line_ending, config.key_without_section, config.section_name_incorrect, config.text_in_section_line, config.key_format_invalid))
 	{
-		std::cout << "test1 passed" << std::endl;
+		std::cout << "test " << id << " passed" << std::endl;
 		return 0;
 	}
 	else
 	{
-		std::cout << "test1 failed" << std::endl;
+		std::cout << "test " << id << " failed" << std::endl;
 		return -id;
 	}
 }
@@ -152,37 +168,11 @@ int main(int, char**)
 
 	GetCPInfoEx(CP_ACP, 0, &info);
 
-	boost::locale::generator gen;
-
-	std::locale current(gen("ru_RU.1251"));
-	std::locale current_utf8(gen("en_US.UTF-8"));
-	std::locale current_utf16(gen("en_US.UTF-16"));
-	std::locale jap_utf8(gen("en_US.UTF-8"));
-	std::locale jap_utf16(gen("en_US.UTF-16"));
-
-
-//	boost::locale::info inf;
-
-
-	boost::locale::generator gen1;
-	std::locale l = gen1("");
-	std::cout << std::use_facet<boost::locale::info>(l).name() << std::endl;
-
-//	std::cout << std::locale::global().c_str();
-	
-	boost::locale::info const &inf=std::use_facet<boost::locale::info>(std::locale(""));
-	std::locale loc= boost::locale::generator().generate("ru_RU.windows-1252");
-	std::ofstream file;
-	//file.imbue(loc);
-	file.open("hello.txt");
-	
-
-	file << boost::locale::conv::from_utf(L"Теория струн",inf.language()) << std::endl;
-
-	//file << L"Теория струн" << std::endl;
-	file.close();
-	return 0;
-
+	std::string current("cp1251");
+	std::string current_utf8("UTF-8");
+	std::string current_utf16("UTF-16");
+	std::string jap_utf8("UTF-8");
+	std::string jap_utf16("UTF-16");
 
 
 
@@ -203,24 +193,24 @@ int main(int, char**)
 
 
 	TestConfig testConfigs[]={
-		//{current,       L"test1",  false, false, false, false, false},
-		//{current_utf8,  L"test2",  false, false, false, false, false},
-		//{current_utf16, L"test3",  false, false, false, false, false},
+		{current,       L"test1",  false, false, false, false, false},
+		{current_utf8,  L"test2",  false, false, false, false, false},
+		{current_utf16, L"test3",  false, false, false, false, false},
 		{current,       L"тест4",  false, false, false, false, false},
 		{current_utf8,  L"тест5",  false, false, false, false, false},
 		{current_utf16, L"тест6",  false, false, false, false, false},
-		//{jap_utf8,      L"試験7",  false, false, false, false, false},
-		//{jap_utf16,     L"試験8",  false, false, false, false, false},
-		//{current_utf8,  L"тест9",  true,  false, false, false, false},
-		//{current_utf8,  L"тест10", false, true,  false, false, false},
-		//{current_utf8,  L"тест11", false, false, true,  false, false},
-		//{current_utf8,  L"тест12", false, false, false, true,  false},
-		//{current_utf8,  L"тест13", false, false, false, false, true},
-		//{current_utf16, L"тест14", true,  false, false, false, false},
-		//{current_utf16, L"тест15", false, true,  false, false, false},
-		//{current_utf16, L"тест16", false, false, true,  false, false},
-		//{current_utf16, L"тест17", false, false, false, true,  false},
-		//{current_utf16, L"тест18", false, false, false, false, true}
+		{jap_utf8,      L"試験7",  false, false, false, false, false},
+		{jap_utf16,     L"試験8",  false, false, false, false, false},
+		{current_utf8,  L"тест9",  true,  false, false, false, false},
+		{current_utf8,  L"тест10", false, true,  false, false, false},
+		{current_utf8,  L"тест11", false, false, true,  false, false},
+		{current_utf8,  L"тест12", false, false, false, true,  false},
+		{current_utf8,  L"тест13", false, false, false, false, true},
+		{current_utf16, L"тест14", true,  false, false, false, false},
+		{current_utf16, L"тест15", false, true,  false, false, false},
+		{current_utf16, L"тест16", false, false, true,  false, false},
+		{current_utf16, L"тест17", false, false, false, true,  false},
+		{current_utf16, L"тест18", false, false, false, false, true}
 	};
 
 	for(size_t i=0; i < boost::size(testConfigs); ++i)

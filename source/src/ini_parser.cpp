@@ -1,8 +1,16 @@
 #include "ini_parser.hpp"
 #include <fstream>
+#include <vector>
+#include <boost/locale.hpp>
+#include "windows.h"
 
 using namespace ema;
 using namespace config;
+
+
+const std::string utf16_encoding = "UTF-16";
+const std::string utf8_encoding = "UTF-8";
+
 
 
 
@@ -33,21 +41,124 @@ void IniParser::parseStream(std::istream& iniFile)
 	}
 }
 
-
-void IniParser::detectEncoding(std::istream& iniFile)
+bool IniParser::detectEncodingByBOM(std::istream& iniFile)
 {
-	unsigned char bomUTF8[] ={0xEF, 0xBB, 0xBF};
-	unsigned char bomUTF16[]={0xFE, 0xFF};
-	unsigned char bomBuffer[3];
+	typedef std::vector<unsigned char> BOM;
+	struct BOMRecord
+	{
+		BOM      				   m_bom;
+		std::string                m_encoding;
+	};
+	typedef std::vector<BOMRecord> BOMRecords;
+	BOMRecords records = {
+		{ { 0xEF, 0xBB, 0xBF }, utf8_encoding },
+		{ { 0xFE, 0xFF }, utf16_encoding },
+	};
 
+	size_t maxBOMSize = std::max_element(records.begin(), records.end(),
+		[](const BOMRecord& l, const BOMRecord& r){ return l.m_bom.size() < r.m_bom.size(); })
+		->m_bom.size();
 
-	iniFile>>bomBuffer;
+	BOM bom(maxBOMSize);
+	for (auto it = bom.begin(); it != bom.end(); ++it)
+	{
+		char ch;
+		iniFile.get(ch);
+		*it = ch;
+	}
+		
+
+	for (auto it = records.begin(); it != records.end(); ++it)
+		if (it->m_bom == bom)
+		{
+			m_iniFileLocale = it->m_encoding;
+			iniFile.seekg(it->m_bom.size());
+			return true;
+		}
+
+	iniFile.seekg(0);
+	return false;
 }
 
 
-std::wstring IniParser::loadString(std::istream&)
+void IniParser::detectEncoding(std::istream& iniFile)
 {
-	return L"";
+	if (!detectEncodingByBOM(iniFile))
+	{
+
+		std::vector<wchar_t> expectedChars = { L' ', L'\n', L'\r', L'\t', L';', L'[' };
+
+		wchar_t test;
+
+		iniFile.read((char*)&test, sizeof(test));
+		iniFile.seekg(0);
+
+		auto it = std::find(expectedChars.begin(), expectedChars.end(), test);
+		if (it != expectedChars.end())
+		{
+			m_iniFileLocale = utf16_encoding;
+		}
+		else
+		{
+			//TODO Dirty
+			UINT langid = GetACP();
+			m_iniFileLocale = "cp";
+			m_iniFileLocale += std::to_string(langid);
+		}
+	}
+
+	if (m_iniFileLocale == utf16_encoding)
+	{
+		char buf[sizeof(wchar_t)];
+		memcpy(buf, L"\n", sizeof(buf));
+		m_sn = std::string(buf, buf + sizeof(buf));
+		memcpy(buf, L"\r", sizeof(buf));
+		m_sr = std::string(buf, buf + sizeof(buf));
+	}
+	else
+	{
+		m_sn = boost::locale::conv::from_utf("\n", m_iniFileLocale);
+		m_sr = boost::locale::conv::from_utf("\r", m_iniFileLocale);
+	}
+}
+
+
+std::wstring IniParser::loadString(std::istream& iniStream)
+{
+	std::string buf;
+	char ch=0;
+
+	while (!iniStream.eof())
+	{
+		iniStream.get(ch);
+		buf += ch;
+
+		if (buf.size() >= m_sn.size() && buf.substr(buf.length() - m_sn.size()) == m_sn)
+		{
+			size_t epos = buf.length() - m_sn.size();
+			if (buf.size() >= m_sn.size() + m_sr.size() &&
+				buf.substr(buf.length() - m_sr.size() - m_sn.size(), buf.length() - epos) == m_sr)
+				epos = buf.length() - m_sr.size() - m_sn.size();
+			
+			buf.erase(epos);
+			break;
+		}
+	}
+	
+	std::wstring result;
+	
+	if (m_iniFileLocale == utf16_encoding)
+	{
+		buf += (char)0;
+		result = (const wchar_t*)buf.c_str();
+	}
+	else
+	{
+		result = boost::locale::conv::to_utf<wchar_t>(buf, m_iniFileLocale);
+	}
+	
+
+	return result;
 }
 
 
@@ -108,6 +219,7 @@ IniParser::Comment& IniParser::Parser::getCurrentComments()
 
 void IniParser::Parser::pushSection()
 {
+	pushKey();
 	if (m_currentSection.m_name.empty())
 		return;
 	m_owner.m_sections.push_back(m_currentSection);
@@ -122,7 +234,10 @@ void IniParser::Parser::pushKey()
 		return;
 
 	if (m_currentSection.m_name.empty())
+	{
+		m_currentKey.m_name.clear();
 		throw ParsingError();
+	}
 
 	m_currentSection.m_keys.push_back(m_currentKey);
 	m_currentKey.m_name.clear();
@@ -132,7 +247,6 @@ void IniParser::Parser::pushKey()
 
 IniParser::Parser::~Parser()
 {
-	pushKey();
 	pushSection();
 }
 
@@ -170,7 +284,7 @@ void IniParser::Parser::parseLine(const std::wstring& line)
 		{
 			pushKey();
 			ParseLine start_name = pline;
-			while (*pline && *pline != L'\t' && *pline != L' ')
+			while (*pline && *pline != L'\t' && *pline != L' ' && *pline != L'=')
 				++pline;
 			ParseLine end_name = pline;
 			truncate(pline);

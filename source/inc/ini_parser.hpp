@@ -118,13 +118,14 @@ private:
 	};
 	friend class Parser;
 
-
+	bool detectEncodingByBOM(std::istream& iniFile);
 	void detectEncoding(std::istream& iniFile);
 	void parseStream(std::istream& iniFile);
 	std::wstring loadString(std::istream&);
 
 
-	std::locale m_iniFileLocale;
+	std::string m_iniFileLocale;
+	std::string m_sr, m_sn;
 	Sections    m_sections;
 	FileName    m_fileName;
 	Comment		m_prefixComment;
