@@ -1,6 +1,24 @@
 
 
+template< int DataTypeId >
+class BaseBoolAttr
+{
+};
 
+template< int DataTypeId >
+class BaseStringAttr
+{
+};
+
+template< int DataTypeId >
+class BaseIntAttr
+{
+};
+
+template< int DataTypeId >
+class BaseDateTimeAttr
+{
+};
 
 
 
@@ -8,11 +26,17 @@ class DataBuffer
 {
 public:
 	typedef unsigned char* DataType;
-	DataBuffer();
-	DataBuffer(size_t size);
-	DataBuffer(size_t size, const DataType buffer);
+	DataBuffer(): m_size(0), m_data(nullptr){}
+	DataBuffer(size_t size): m_size(size), m_data(new (*DataType)[size]){}
+	//DataBuffer(size_t size, const DataType buffer) : m_size(size), 
+	DataBuffer (DataBuffer && ref): m_size(ref.size), m_data(ref.m_data){ ref.m_data=nullptr;}
+	
 	bool isEmpty()const;
 private:	
+	DataBuffer(const DataBuffer&);
+
+	size_t m_size;
+	DataType m_data;
 };
 
 
