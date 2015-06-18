@@ -1,0 +1,44 @@
+
+
+
+
+
+
+class DataBuffer
+{
+public:
+	typedef unsigned char* DataType;
+	DataBuffer();
+	DataBuffer(size_t size);
+	DataBuffer(size_t size, const DataType buffer);
+	bool isEmpty()const;
+private:	
+};
+
+
+template<int DataTypeId>
+AttrData<DataTypeId> getAttr()
+{
+	AttrIndexType index = AttrData<DataTypeId>::attr_index;
+	static_assert(index!=AttrIndexType(-1));
+	AttrIndexType innerIndex = getInnerIndex(index);
+	if(index == AttrIndexType(-1))
+	{
+		auto guard = boost::make_lock_guard(m_mutex);
+		m_databuffer.push_back(DataBuffer());
+		index = m_databuffer.size()-1;
+	}
+	return AttrData<DataTypeId>(index);
+}
+
+template<int DataTypeId>
+String getAttrName()
+{
+	return AttrData<DataTypeId>::name;
+}
+
+
+
+
+
+
