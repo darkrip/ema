@@ -8,7 +8,8 @@
 		external	
 3) output:
 	exe and configs
-		ema_vs2012_win32_release
+		project.config.platform.ide
+		ema.inireader.test.Debug.Win32.vs2013		
 4) intermediate	
 	objects
 
