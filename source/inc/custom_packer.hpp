@@ -2,9 +2,11 @@
 #define __CUSTOM_PACKER_HPP__
 
 
-#include "defs.hpp"
+
 #include "packer.hpp"
 #include "console_command.hpp"
+#include "packer_id_list.hpp"
+#include "defs.hpp"
 #include <set>
 #include <list>
 
@@ -22,20 +24,23 @@ public:
 
 private:
 	typedef std::set<FileName> ExtensionList;
-//	typedef std::list<PackID>  PackerIdList;
+	typedef std::shared_ptr<CustomPacker> Ref;
 	friend class CustomPackerFactoryBase;
 
 	String		  m_name;
 	String		  m_description;
 	ExtensionList m_extensionList;
-//	PackerIdList  m_ids;
+	PackerIdList  m_ids;
+	String        m_encoding;
+	String        m_archiver;
+	String        m_iconPath;
 
 //	ErrorLevel m_errorLevel;
 	bool 	   m_batchUnpack;
 	bool	   m_skipEmpty;
 	bool 	   m_skipDirsInFileList;
 	bool 	   m_unixPath;
-
+	
 //	VariableProcessor m_variableProcessor;
 	//List section	
 	ConsoleCommand m_listCommand;

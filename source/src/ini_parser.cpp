@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <boost/locale.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include "windows.h"
 
 using namespace ema;
@@ -176,20 +177,38 @@ std::wstring IniParser::getString(SectionIndex index, KeyNameRef name, const std
 	}
 }
 
-std::wstring IniParser::getString(SectionNameRef section_name, KeyNameRef key_name, const std::wstring &defValue)
+String IniParser::getString(SectionNameRef section_name, KeyNameRef key_name, const std::wstring &defValue)
 {
 	auto sectionIt = m_sections.get<1>().find(section_name);
 	if(sectionIt==m_sections.get<1>().end())
 		return defValue;
 	else
-	{
-		auto keyIt = sectionIt->m_keys.get<1>().find(key_name);
-		if(keyIt!=sectionIt->m_keys.get<1>().end())
-			return keyIt->m_value;
-		else
-			return defValue;
-	}
+		return getString(sectionIt.get_node<0>, key_name, defValue);
 }
+
+bool IniParser::getBool(SectionIndex sectionIndex, KeyNameRef key_name, bool defValue)
+{
+	String str = getString(sectionIndex, key_name);
+	boost::trim(str);
+	if(str.empty())
+		return defValue;
+	if(str==L"1" || str==L"true" || str==L"t" || str==L"y" )
+		return true;
+	else if(str==L"0" || str==L"false" || str==L"f" || str==L"n" )
+		return false;
+	else 
+		return defValue;
+}
+
+bool IniParser::getBool(SectionNameRef section_name, KeyNameRef key_name, bool defValue)
+{
+	auto sectionIt = m_sections.get<1>().find(section_name);
+	if(sectionIt==m_sections.get<1>().end())
+		return defValue;
+	else
+		return getBool(sectionIt.get_node<0>, key_name, defValue);
+}
+
 
 
 

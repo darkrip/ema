@@ -20,6 +20,8 @@ class CustomPackerIniConfigurator : public ema::pack::CustomPackerFactoryBase
 public:
 	CustomPackerIniConfigurator(const FileName& inifilename);
 private:
+	void createPacker(size_t index);
+
 	IniParser m_iniParser;
 };
 

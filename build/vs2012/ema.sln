@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ema.inireader.test", "ema.inireader.test\ema.inireader.test.vcxproj", "{C6D9F691-8E38-44A9-AE94-2582498DCB16}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ema.packs.test", "ema.packs.test\ema.packs.test.vcxproj", "{3FFC4278-8DBC-4979-9B55-7F34B5BD93F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{C6D9F691-8E38-44A9-AE94-2582498DCB16}.Debug|Win32.Build.0 = Debug|Win32
 		{C6D9F691-8E38-44A9-AE94-2582498DCB16}.Release|Win32.ActiveCfg = Release|Win32
 		{C6D9F691-8E38-44A9-AE94-2582498DCB16}.Release|Win32.Build.0 = Release|Win32
+		{3FFC4278-8DBC-4979-9B55-7F34B5BD93F3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3FFC4278-8DBC-4979-9B55-7F34B5BD93F3}.Debug|Win32.Build.0 = Debug|Win32
+		{3FFC4278-8DBC-4979-9B55-7F34B5BD93F3}.Release|Win32.ActiveCfg = Release|Win32
+		{3FFC4278-8DBC-4979-9B55-7F34B5BD93F3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

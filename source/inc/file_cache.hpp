@@ -33,7 +33,7 @@ public:
 	FileName getName()const;
 	bool     isFolder()const;
 
-	FileAttr& getAttr();
+	attr::FileAttr& getAttr();
 	FileName getExtractedName();
 
 	void setAutoUpgrade();

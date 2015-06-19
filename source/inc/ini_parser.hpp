@@ -56,6 +56,10 @@ public:
 	void setString(SectionIndex, KeyNameRef, const std::wstring &value);
 	void setString(SectionNameRef, KeyNameRef, const std::wstring &value);
 
+	bool getBool(SectionIndex, KeyNameRef, bool defValue = false);
+	bool getBool(SectionNameRef, KeyNameRef, bool defValue = false);
+
+
 	void reload();
 	void commit();
 
