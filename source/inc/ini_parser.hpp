@@ -59,6 +59,9 @@ public:
 	bool getBool(SectionIndex, KeyNameRef, bool defValue = false);
 	bool getBool(SectionNameRef, KeyNameRef, bool defValue = false);
 
+	StringList getStringList(SectionIndex, KeyNameRef);
+	StringList getStringList(SectionNameRef, KeyNameRef);
+
 
 	void reload();
 	void commit();

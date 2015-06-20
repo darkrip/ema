@@ -162,6 +162,14 @@ std::wstring IniParser::loadString(std::istream& iniStream)
 	return result;
 }
 
+bool IniParser::isKeyExist(SectionIndex index, KeyNameRef key_name)
+{
+	if (index == wrongIndex || index >= sectionCount())
+		return false;
+
+	return m_sections.get<0>()[index].m_keys.get<1>().find(key_name) != m_sections.get<0>()[index].m_keys.get<1>().end();
+}
+
 
 std::wstring IniParser::getString(SectionIndex index, KeyNameRef name, const std::wstring &defValue)
 {
@@ -183,7 +191,7 @@ String IniParser::getString(SectionNameRef section_name, KeyNameRef key_name, co
 	if(sectionIt==m_sections.get<1>().end())
 		return defValue;
 	else
-		return getString(sectionIt.get_node<0>, key_name, defValue);
+		return getString(m_sections.get<0>().iterator_to(*sectionIt) - m_sections.get<0>().begin(), key_name, defValue);
 }
 
 bool IniParser::getBool(SectionIndex sectionIndex, KeyNameRef key_name, bool defValue)
@@ -206,10 +214,38 @@ bool IniParser::getBool(SectionNameRef section_name, KeyNameRef key_name, bool d
 	if(sectionIt==m_sections.get<1>().end())
 		return defValue;
 	else
-		return getBool(sectionIt.get_node<0>, key_name, defValue);
+		return getBool(m_sections.get<0>().iterator_to(*sectionIt) - m_sections.get<0>().begin(), key_name, defValue);
+
+	
 }
 
 
+StringList IniParser::getStringList(SectionIndex section_index, KeyNameRef key_name)
+{
+	StringList result;
+	if (isKeyExist(section_index, key_name))
+	{
+		result.push_back(getString(section_index, key_name));
+	} 
+	else
+		for (size_t i = 0;; ++i)
+		{
+			KeyName key_name_l = key_name + std::to_wstring(i);
+			if (!isKeyExist(section_index, key_name_l))
+				break;
+			result.push_back(getString(section_index, key_name_l));
+		};
+	return result;
+}
+
+StringList IniParser::getStringList(SectionNameRef section_name, KeyNameRef key_name)
+{
+	auto sectionIt = m_sections.get<1>().find(section_name);
+	if (sectionIt == m_sections.get<1>().end())
+		return StringList();
+	else
+		return getStringList(m_sections.get<0>().iterator_to(*sectionIt) - m_sections.get<0>().begin(), key_name);
+}
 
 
 IniParser::Parser::Parser(IniParser& owner) : m_owner(owner)

@@ -21,6 +21,11 @@ public:
 	CustomPackerIniConfigurator(const FileName& inifilename);
 private:
 	void createPacker(size_t index);
+	void parsePackIdList(StringRef sID, StringRef sIDPos, StringRef sIDSeekRange, StringRef sExcludeIDs);
+	void parseExtensions(StringRef extensions);
+	void parseCustomVariables(StringListRef strings);
+	void parseLanguageFile(StringRef);
+
 
 	IniParser m_iniParser;
 };

@@ -4,6 +4,7 @@
 
 
 #include "packer.hpp"
+#include "list_command_handler.hpp"
 #include "console_command.hpp"
 #include "packer_id_list.hpp"
 #include "defs.hpp"
@@ -24,7 +25,7 @@ public:
 
 private:
 	typedef std::set<FileName> ExtensionList;
-	typedef std::shared_ptr<CustomPacker> Ref;
+	typedef std::shared_ptr<CustomPacker> Ptr;
 	friend class CustomPackerFactoryBase;
 
 	String		  m_name;
@@ -39,23 +40,25 @@ private:
 	bool 	   m_batchUnpack;
 	bool	   m_skipEmpty;
 	bool 	   m_skipDirsInFileList;
+	bool       m_searchUglyDirs;
 	bool 	   m_unixPath;
+	bool       m_debug;
 	
 //	VariableProcessor m_variableProcessor;
+	console::ConsoleCommand m_isArchive;
 	//List section	
-	ConsoleCommand m_listCommand;
-	String  m_startListParsing;
-	String  m_endListParsing;
-	String  m_ignoreStrings;
-//	ListFormat m_listFormat;
+	console::ConsoleCommand m_listCommand;
+	console::ListCommandHandler m_listCommandHandler;
 	//Extract section
-	ConsoleCommand m_extractCommand;
-	ConsoleCommand m_extractWithoutPathCommand;
+	console::ConsoleCommand m_extractCommand;
+	console::ConsoleCommand m_extractWithoutPathCommand;
 
-	ConsoleCommand m_testCommand;
-	ConsoleCommand m_deleteCommand;
-	ConsoleCommand m_addCommand;
-	ConsoleCommand m_moveCommand;
+	console::ConsoleCommand m_testCommand;
+	console::ConsoleCommand m_deleteCommand;
+	console::ConsoleCommand m_addCommand;
+	console::ConsoleCommand m_moveCommand;
+
+	String m_inputString;
 };
 
 

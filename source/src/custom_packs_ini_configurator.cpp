@@ -1,6 +1,9 @@
 #include "custom_packs_ini_configurator.hpp"
 
-
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/bind.hpp>
 
 using namespace ema;
 using namespace config;
@@ -36,19 +39,23 @@ void CustomPackerIniConfigurator::createPacker(size_t index)
 	setArchiver(m_iniParser.getString(index, L"Description"));
 	setPackIconPath(m_iniParser.getString(index, L"Icon"));
 
-	setPackListProcessPattern(ListProcessPattern(m_iniParser.getStringList(index, L"Format"), m_iniParser.getString(index, L"Start"), m_iniParser.getString(index, L"End")));
+	setPackListCommandHandler(console::ListCommandHandler(
+		m_iniParser.getStringList(index, L"Format"), 
+		m_iniParser.getString(index, L"Start"), 
+		m_iniParser.getString(index, L"End"),
+		m_iniParser.getStringList(index, L"IgnoreString")));
 
-	setPackIsArchiveCommand(ConsoleCommand(m_iniParser.getString(index, L"IsArchive")));
-	setPackListCommand(ConsoleCommand(m_iniParser.getString(index, L"List")));
-	setPackExtractCommand(ConsoleCommand(m_iniParser.getString(index, L"Extract")));
-	setPackExtractWithPathCommand(ConsoleCommand(m_iniParser.getString(index, L"ExtractWithPath")));
+	setPackIsArchiveCommand(console::ConsoleCommand(m_iniParser.getString(index, L"IsArchive")));
+	setPackListCommand(console::ConsoleCommand(m_iniParser.getString(index, L"List")));
+	setPackExtractCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Extract")));
+	setPackExtractWithPathCommand(console::ConsoleCommand(m_iniParser.getString(index, L"ExtractWithPath")));
 
-	setPackTestCommand(ConsoleCommand(m_iniParser.getString(index, L"Test")));
-	setPackDeleteCommand(ConsoleCommand(m_iniParser.getString(index, L"Delete")));
-	setPackAddCommand(ConsoleCommand(m_iniParser.getString(index, L"Add")));
-	setPackMoveCommand(ConsoleCommand(m_iniParser.getString(index, L"Move")));
+	setPackTestCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Test")));
+	setPackDeleteCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Delete")));
+	setPackAddCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Add")));
+	setPackMoveCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Move")));
 
-	setPackInputString(ConsoleCommand(m_iniParser.getString(index, L"InputString")));
+	setPackInputString(m_iniParser.getString(index, L"InputString"));
 
 	setPackBatchUnpack(m_iniParser.getBool(index, L"BatchUnpack"));
 	setPackSkipEmpty(m_iniParser.getBool(index, L"SkipEmpty"));
@@ -59,8 +66,39 @@ void CustomPackerIniConfigurator::createPacker(size_t index)
 
 	parseCustomVariables(m_iniParser.getStringList(index, L"CustomVariable"));
 
-	setPackLandFile(m_iniParser.getString(index, L"LandFile"));
+	parseLanguageFile(m_iniParser.getString(index, L"LanguageFile"));
+}
 
-	//PackerIdList pil;
 
+void CustomPackerIniConfigurator::parsePackIdList(StringRef sID, StringRef sIDPos, StringRef sIDSeekRange, StringRef sExcludeIDs)
+{
+	pack::PackerIdList pil;
+	//TODO:
+
+	setPackIdList(pil);
+}
+
+
+void CustomPackerIniConfigurator::parseExtensions(StringRef extensions)
+{
+	StringList exts;
+	boost::split(exts, extensions, boost::is_any_of(L","));
+	std::for_each(exts.begin(), exts.end(), boost::bind(&boost::trim<String>,
+		_1, std::locale()));
+
+	std::for_each(exts.begin(), exts.end(), [](String& str){ 
+		if (str[0] == L'.')str.erase(0, 1);	});
+
+	setPackExtensions(exts);
+}
+
+
+void CustomPackerIniConfigurator::parseCustomVariables(StringListRef strings)
+{
+	//TODO:
+}
+
+void CustomPackerIniConfigurator::parseLanguageFile(StringRef)
+{
+	//TODO:
 }
