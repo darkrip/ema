@@ -7,7 +7,10 @@
 #include "list_command_handler.hpp"
 #include "console_command.hpp"
 #include "packer_id_list.hpp"
+#include "variable_processor.hpp"
+
 #include "defs.hpp"
+
 #include <set>
 #include <list>
 
@@ -21,11 +24,17 @@ namespace pack
 class CustomPacker : public PackerBase
 {
 public:
-	CustomPacker(StringRef packerName);
-
-private:
 	typedef std::set<FileName> ExtensionList;
 	typedef std::shared_ptr<CustomPacker> Ptr;
+	
+	bool isCorrectFile(const FileName&, PackDataStream&);
+	PackFile::Ref open(const FileName&, PackDataStream&);
+	void Upgrade(FileCache& file, FileCache::LoadStatus newRequestedStatus, bool readOnly = true);
+
+protected:
+	CustomPacker(StringRef packerName);
+	void init();
+private:
 	friend class CustomPackerFactoryBase;
 
 	String		  m_name;
@@ -44,7 +53,7 @@ private:
 	bool 	   m_unixPath;
 	bool       m_debug;
 	
-//	VariableProcessor m_variableProcessor;
+	console::VariableProcessor::Ptr m_variableProcessor;
 	console::ConsoleCommand m_isArchive;
 	//List section	
 	console::ConsoleCommand m_listCommand;

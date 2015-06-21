@@ -1,6 +1,8 @@
 #ifndef __CONSOLE_COMMAND_HPP__
 #define __CONSOLE_COMMAND_HPP__
 
+#include "variable_processor.hpp"
+
 #include <defs.hpp>
 #include <memory>
 
@@ -17,7 +19,9 @@ class ConsoleCommand
 public:
 	typedef std::shared_ptr<ConsoleCommand> Ptr;
 	typedef const ConsoleCommand&			Ref;
+	ConsoleCommand();
 	ConsoleCommand(StringRef strCommand);
+	void init(VariableProcessor::Ptr);
 
 };
 

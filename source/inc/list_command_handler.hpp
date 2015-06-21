@@ -13,6 +13,7 @@ namespace console
 class ListCommandHandler
 {
 public:
+	ListCommandHandler();
 	ListCommandHandler(StringListRef format, StringRef start, StringRef end, StringListRef ignoreStrings);
 
 };

@@ -1,11 +1,13 @@
 #ifndef __CUSTOM_PACKER_FACTORY_HPP__
 #define __CUSTOM_PACKER_FACTORY_HPP__
 
-#include "defs.hpp"
 #include "custom_packer.hpp"
 #include "list_command_handler.hpp"
 #include "console_command.hpp"
 #include "packer_id_list.hpp"
+
+#include "defs.hpp"
+
 #include <iterator>
 
 namespace ema
