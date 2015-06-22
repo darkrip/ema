@@ -1,0 +1,90 @@
+
+
+
+
+
+
+
+SINGLE THREAD TO PACK COMMAND IN SAME TIME
+
+
+Var
+{
+int id
+vector<index> mod;
+}
+
+
+Context(Var)
+
+
+
+Processor(Store All vars)-->Packer Context(Store User variable, Error level, Temporary folder)-->Pack Context(Archive name, Short archive name, Password,  Current archive)->  Command Context(%%L, %%l, %%F, %%f)
+
+
+
+
+Processor.CreateContext();
+
+
+CommandContext
+
+
+
+void RunCommand(Pack pack, cmCommandId, CommandHandler handler=EmptyHandler())
+{
+	SemaforeExecutorManager::getInstance().
+		execute(pack, [&](){  commands[cmCommandId].execute(context, handler);  });	
+}
+
+
+
+
+void List()
+{
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+; %%A - Archive name.
+; %%a - Short archive name.
+; %%W - Temporary folder including the terminating slash.
+; %%P - Password.
+; %%R - Current archive folder.
+; %%L - Filelist name. Filelist is the file containing names of files
+; %%l - Filelist with short file names.
+; %%F - Names of one or more files to be processed. If all names
+; %%f - The name of a single file to process. The archiver will be
+; %%E<errorlevel> - maximum acceptable command errorlevel.
+; %%S - Place in the command line to insert additional switches,
+;    'Q' - quote names with spaces;
+;    'q' - quote all names;
+;    'S' - use '/' instead of '\' in pathnames;
+;    'M' - transfer folder names to archiver as 'foldername\*.*';
+;    'N' - transfer folder names to archiver as 'foldername';
+;    '*' - use '*' mask to select all files. This modifier
+;          overrides "All files mask" parameter for single
+;          archiver command;
+;    'W' - use name only, without path;
+;    'P' - use path only, without name;
+;    'A' - use ANSI encoding.
+
+
