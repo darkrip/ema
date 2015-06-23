@@ -31,21 +31,51 @@ CommandContext
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void RunCommand(Pack pack, cmCommandId, CommandHandler handler=EmptyHandler())
 {
 	SemaforeExecutorManager::getInstance().
-		execute(pack, [&](){  commands[cmCommandId].execute(context, handler);  });	
+		execute(pack, [&](){  commands[cmCommandId].execute(context, handler);});	
+}
+
+
+
+PackFile::Ref open(const FileName& file, PackDataStream& stream)
+{
+	if(!isCorrectFile(file, stream))
+		throw WrongFilePacker(file);
+
+	CustomPack::Ptr pack(new CustomPack);
+	Context<CustomPack>::Ptr pack_context = new Context<CustomPack>(m_context, pack);
+	pack->SharedData< Context<Pack>::Ptr >() = pack_context;
+	return pack;
 }
 
 
 
 
-void List()
+void List(FileNameRef filename)
 {
-
-
-
-
+	
+	Files files={filename};
+	Context<Command> command_context(*pack_context, m_List, files);
+	ListCommandHandler lch(pack);
+	RunCommand(pack, cmList, lch);
 
 
 
@@ -86,5 +116,35 @@ void List()
 ;    'W' - use name only, without path;
 ;    'P' - use path only, without name;
 ;    'A' - use ANSI encoding.
+
+
+
+
+
+int id = registerVar<Context<Pack> >(L"A", boost::bind(&Pack::getArhiveName, _1));
+         registerVar<Context<Pack> >(L"a", boost::bind(&tool::shortPathCreator, boost::bind(&Pack::getArhiveName, _1)));
+		 registerVar<Pack>(L"W", boost::bind(&Pack::getTemporaryFolder, _1);
+		 registerVar<Pack>(L"P", boost::bind(&Pack::getPassword, _1);
+		 
+		 registerVar<Command>(L"P", boost::bind(&Pack::getPassword, _1);
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
