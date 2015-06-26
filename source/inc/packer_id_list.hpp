@@ -2,6 +2,8 @@
 #define __PACKER_ID_LIST_HPP__
 
 
+#include "defs.hpp"
+
 namespace ema
 {
 namespace pack
@@ -9,7 +11,8 @@ namespace pack
 
 class PackerIdList
 {
-
+public:
+	bool isCorrect(PackDataReadStream&);
 };
 
 

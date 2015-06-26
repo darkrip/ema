@@ -28,14 +28,14 @@ protected:
 
 	void setPackListCommandHandler(const console::ListCommandHandler& handler){ m_packer->m_listCommandHandler = handler; }
 
-	void setPackIsArchiveCommand(console::ConsoleCommand::Ref command){ m_packer->m_isArchive = command; }
-	void setPackListCommand(console::ConsoleCommand::Ref command){ m_packer->m_listCommand = command; }
-	void setPackExtractCommand(console::ConsoleCommand::Ref command){ m_packer->m_extractCommand = command; }
-	void setPackExtractWithPathCommand(console::ConsoleCommand::Ref command){ m_packer->m_extractWithoutPathCommand = command; }
-	void setPackTestCommand(console::ConsoleCommand::Ref command){ m_packer->m_testCommand = command; }
-	void setPackDeleteCommand(console::ConsoleCommand::Ref command){ m_packer->m_deleteCommand = command; }
-	void setPackAddCommand(console::ConsoleCommand::Ref command){ m_packer->m_addCommand = command; }
-	void setPackMoveCommand(console::ConsoleCommand::Ref command){ m_packer->m_moveCommand = command; }
+	void setPackIsArchiveCommand(console::ConsoleCommand::Ref command){ m_packer->m_commands[CustomPacker::ciIsArchive] = command; }
+	void setPackListCommand(console::ConsoleCommand::Ref command){ m_packer->m_commands[CustomPacker::ciList] = command; }
+	void setPackExtractCommand(console::ConsoleCommand::Ref command){ m_packer->m_commands[CustomPacker::ciExtract] = command; }
+	void setPackExtractWithPathCommand(console::ConsoleCommand::Ref command){ m_packer->m_commands[CustomPacker::ciExtractWithoutPath] = command; }
+	void setPackTestCommand(console::ConsoleCommand::Ref command){ m_packer->m_commands[CustomPacker::ciTest] = command; }
+	void setPackDeleteCommand(console::ConsoleCommand::Ref command){ m_packer->m_commands[CustomPacker::ciDelete] = command; }
+	void setPackAddCommand(console::ConsoleCommand::Ref command){ m_packer->m_commands[CustomPacker::ciAdd] = command; }
+	void setPackMoveCommand(console::ConsoleCommand::Ref command){ m_packer->m_commands[CustomPacker::ciMove] = command; }
 
 
 	void setPackInputString(StringRef inputString){ m_packer->m_inputString = inputString; }

@@ -7,26 +7,50 @@
 
 namespace ema
 {
-namespace console
+namespace var
 {
 
-typedef String VariableValue;
 
-class ContextBase
+
+class VariableBase
 {
 public:
-	VariableValue getVariable
-
-
+	typedef size_t Id;
+	typedef String Name;
+	typedef String Value;
+	typedef StringRef NameRef;
 };
 
 
 
 template<typename ContextHolder>
+class Variable : public VariableBase
+{
+};
+
+class VariableModificatorBase
+{
+public:
+	typedef size_t Id;
+};
+
+
+typedef std::vector<VariableModificatorBase::Id> ModificatorsList;
+
+
+class ContextBase
+{
+public:
+	virtual VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list=ModificatorsList(), bool ignore_mod_for_empty=true);
+};
+
+
+template<typename ContextHolder>
 class Context : public ContextBase
 {
-
+public:
 };
+
 
 
 
@@ -34,20 +58,22 @@ class VariableProcessor
 {
 public:
 	typedef std::shared_ptr<VariableProcessor> Ptr;
-	typedef size_t VariableId;
-	typedef String VariableName;
-	typedef StringRef VariableNameRef;
+	static const VariableBase::Id wrongIndex = (VariableBase::Id)-1;
 
 	void init();
 
-	template< typename ContextHolder >
-	VariableId addVariable(VariableNameRef, );
-	
-
-
-
-
+	template< typename ContextHolder, typename Getter >
+	VariableBase::Id registerVar(VariableBase::NameRef, const Getter& );
+	VariableBase::Id findVar(VariableBase::NameRef);
+	const VariableBase&      getVariable(VariableBase::Id);
 };
+//-----------------------------------------------------------------------------------
+
+template< typename ContextHolder, typename Getter >
+VariableBase::Id VariableProcessor::registerVar(VariableBase::NameRef name, const Getter& getter )
+{
+	return 	wrongIndex;
+}
 
 
 
@@ -56,7 +82,8 @@ public:
 
 
 
-}//console
+
+}//var
 }//ema
 
 

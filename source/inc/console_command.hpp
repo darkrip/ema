@@ -13,6 +13,17 @@ namespace console
 {
 
 
+class ConsoleCommandHandler
+{
+
+};
+
+class EmptyHandler : public ConsoleCommandHandler
+{
+
+};
+
+
 
 class ConsoleCommand
 {
@@ -21,7 +32,7 @@ public:
 	typedef const ConsoleCommand&			Ref;
 	ConsoleCommand();
 	ConsoleCommand(StringRef strCommand);
-	void init(VariableProcessor::Ptr);
+	void init(var::VariableProcessor::Ptr);
 
 };
 

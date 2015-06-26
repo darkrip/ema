@@ -15,6 +15,9 @@ class PackFile
 public:
 	typedef std::shared_ptr<PackFile> Ref;
 	FileName getPackName()const;
+	FileName getPackFullPatch()const;
+	FileName getTmpFolder()const;
+	FileName getPassword()const;
 	FileCache& getRoot();
 	std::shared_ptr<PackerBase> getPacker();
 };

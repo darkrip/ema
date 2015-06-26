@@ -36,6 +36,10 @@ protected:
 	void init();
 private:
 	friend class CustomPackerFactoryBase;
+	enum CommandsId{ ciEmpty=0, ciIsArchive, ciList, ciExtract, ciExtractWithoutPath, ciTest, ciDelete, ciAdd, ciMove, ciLastCommand };
+
+	void initVariables();
+	int runCommand(CommandsId, var::ContextBase&, console::ConsoleCommandHandler& handler=console::EmptyHandler());
 
 	String		  m_name;
 	String		  m_description;
@@ -53,20 +57,9 @@ private:
 	bool 	   m_unixPath;
 	bool       m_debug;
 	
-	console::VariableProcessor::Ptr m_variableProcessor;
-	console::ConsoleCommand m_isArchive;
-	//List section	
-	console::ConsoleCommand m_listCommand;
+	var::VariableProcessor::Ptr m_variableProcessor;
+	console::ConsoleCommand m_commands[ciLastCommand];
 	console::ListCommandHandler m_listCommandHandler;
-	//Extract section
-	console::ConsoleCommand m_extractCommand;
-	console::ConsoleCommand m_extractWithoutPathCommand;
-
-	console::ConsoleCommand m_testCommand;
-	console::ConsoleCommand m_deleteCommand;
-	console::ConsoleCommand m_addCommand;
-	console::ConsoleCommand m_moveCommand;
-
 	String m_inputString;
 };
 

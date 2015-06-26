@@ -29,6 +29,7 @@ void CustomPackerFactoryBase::registration()
 	m_packer->init();
 
 	ema::pack::PackerBase::Ptr ptr = m_packer;
+	m_packer.reset();
 	PackerManager::getInstance().registerPacker(ptr);
 
 }

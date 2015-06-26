@@ -78,6 +78,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\src\custom_packer.cpp" />
+    <ClCompile Include="..\..\..\source\src\custom_packer_factory.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packs_ini_configurator.cpp" />
     <ClCompile Include="..\..\..\source\src\ini_parser.cpp" />
     <ClCompile Include="..\..\..\source\test\ema.packs.test\main.cpp" />
@@ -90,6 +92,10 @@
     <None Include="..\..\..\source\test\ema.packs.test\test.data\TestPacks1.testpack" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\source\external\darktools\inc\exit_scope.hpp" />
+    <ClInclude Include="..\..\..\source\external\darktools\inc\file_tools.hpp" />
+    <ClInclude Include="..\..\..\source\external\darktools\inc\guid.hpp" />
+    <ClInclude Include="..\..\..\source\external\darktools\inc\singleton.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer_factory.hpp" />
@@ -98,10 +104,12 @@
     <ClInclude Include="..\..\..\source\inc\file_attr.hpp" />
     <ClInclude Include="..\..\..\source\inc\file_cache.hpp" />
     <ClInclude Include="..\..\..\source\inc\ini_parser.hpp" />
+    <ClInclude Include="..\..\..\source\inc\list_command_handler.hpp" />
     <ClInclude Include="..\..\..\source\inc\packer.hpp" />
     <ClInclude Include="..\..\..\source\inc\packer_id_list.hpp" />
     <ClInclude Include="..\..\..\source\inc\pack_file.hpp" />
     <ClInclude Include="..\..\..\source\inc\regstorage.hpp" />
+    <ClInclude Include="..\..\..\source\inc\variable_processor.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
