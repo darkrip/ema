@@ -121,13 +121,21 @@ void List(FileNameRef filename)
 
 
 
+
+Context as holder 
+
+
+
+
+
 int id = registerVar<Context<Pack> >(L"A", boost::bind(&Pack::getArhiveName, _1));
          registerVar<Context<Pack> >(L"a", boost::bind(&tool::shortPathCreator, boost::bind(&Pack::getArhiveName, _1)));
-		 registerVar<Pack>(L"W", boost::bind(&Pack::getTemporaryFolder, _1);
-		 registerVar<Pack>(L"P", boost::bind(&Pack::getPassword, _1);
+		 registerVar<Context<Command> >(L"W", boost::bind(&Pack::getTemporaryFolder, _1);
 		 
-		 registerVar<Command>(L"P", boost::bind(&Pack::getPassword, _1);
+		 registerVar<Context<Packer> >
 		 
+		 registerModificator();
+		 functor, have VarId, Context, Result
 
 
 
