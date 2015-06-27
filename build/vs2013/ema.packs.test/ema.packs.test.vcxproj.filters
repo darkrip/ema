@@ -30,6 +30,9 @@
     <ClCompile Include="..\..\..\source\src\custom_packer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\src\console_command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\inc\custom_packs_ini_configurator.hpp">

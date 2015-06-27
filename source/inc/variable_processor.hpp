@@ -2,6 +2,8 @@
 #define __VARIABLE_PROCESSOR_HPP__
 
 
+#include "defs.hpp"
+
 #include <memory>
 
 
@@ -41,7 +43,14 @@ typedef std::vector<VariableModificatorBase::Id> ModificatorsList;
 class ContextBase
 {
 public:
-	virtual VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list=ModificatorsList(), bool ignore_mod_for_empty=true);
+	virtual VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list=ModificatorsList(), bool ignore_mod_for_empty=true)=0;
+};
+
+
+class EmptyContext : public ContextBase
+{
+public:
+	virtual VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list = ModificatorsList(), bool ignore_mod_for_empty = true){ return L""; }
 };
 
 

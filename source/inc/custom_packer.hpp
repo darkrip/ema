@@ -61,6 +61,8 @@ private:
 	console::ConsoleCommand m_commands[ciLastCommand];
 	console::ListCommandHandler m_listCommandHandler;
 	String m_inputString;
+
+	console::ConsoleTerm m_console;
 };
 
 

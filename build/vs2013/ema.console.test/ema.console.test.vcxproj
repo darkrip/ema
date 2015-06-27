@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{04E6F1A8-E4CA-451C-8ED4-56E234AEACC7}</ProjectGuid>
-    <RootNamespace>emapackstest</RootNamespace>
+    <ProjectGuid>{A8DC021B-A060-4D4B-86FF-48DDD27D89F9}</ProjectGuid>
+    <RootNamespace>emaconsoletest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,30 +41,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\..\output\tests\</OutDir>
     <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2013\</IntDir>
-    <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(SolutionDir)..\..\source\external\boost;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(SolutionDir)..\..\source\external\boost;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)..\..\source\external\boost\stage\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\output\tests</OutDir>
-    <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2013</IntDir>
-    <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\output\tests\</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2013\</IntDir>
+    <LibraryPath>$(SolutionDir)..\..\source\external\boost\stage\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(SolutionDir)..\..\source\external\boost;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)" mkdir "$(SolutionDir)..\..\output\tests\$(ProjectName)"
-if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" copy "$(SolutionDir)..\..\source\test\ema.packs.test" "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini"</Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>Create test dir and copy test ini file</Message>
+if exist "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" robocopy "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.*
+IF %ERRORLEVEL% GEQ 8 exit 1
+exit 0</Command>
+      <Message>Create test folder</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,7 +74,6 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -83,34 +82,19 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)" mkdir "$(SolutionDir)..\..\output\tests\$(ProjectName)"
-if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" copy "$(SolutionDir)..\..\source\test\ema.packs.test" "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini"</Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>Create test dir and copy test ini file</Message>
+if exist "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" robocopy "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.*
+IF %ERRORLEVEL% GEQ 8 exit 1
+exit 0</Command>
+      <Message>Create test folder</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\src\console_command.cpp" />
-    <ClCompile Include="..\..\..\source\src\custom_packer.cpp" />
-    <ClCompile Include="..\..\..\source\src\custom_packer_factory.cpp" />
-    <ClCompile Include="..\..\..\source\src\custom_packs_ini_configurator.cpp" />
-    <ClCompile Include="..\..\..\source\src\ini_parser.cpp" />
-    <ClCompile Include="..\..\..\source\test\ema.packs.test\main.cpp" />
+    <ClCompile Include="..\..\..\source\test\ema.console.test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
-    <ClInclude Include="..\..\..\source\inc\custom_packer.hpp" />
-    <ClInclude Include="..\..\..\source\inc\custom_packer_factory.hpp" />
-    <ClInclude Include="..\..\..\source\inc\custom_packs_ini_configurator.hpp" />
     <ClInclude Include="..\..\..\source\inc\defs.hpp" />
-    <ClInclude Include="..\..\..\source\inc\file_attr.hpp" />
-    <ClInclude Include="..\..\..\source\inc\file_cache.hpp" />
-    <ClInclude Include="..\..\..\source\inc\ini_parser.hpp" />
-    <ClInclude Include="..\..\..\source\inc\list_command_handler.hpp" />
-    <ClInclude Include="..\..\..\source\inc\packer.hpp" />
-    <ClInclude Include="..\..\..\source\inc\packer_id_list.hpp" />
-    <ClInclude Include="..\..\..\source\inc\pack_file.hpp" />
-    <ClInclude Include="..\..\..\source\inc\regstorage.hpp" />
     <ClInclude Include="..\..\..\source\inc\variable_processor.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

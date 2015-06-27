@@ -3,7 +3,11 @@
 
 #include "variable_processor.hpp"
 
-#include <defs.hpp>
+#include "defs.hpp"
+
+#include <boost/interprocess/sync/interprocess_mutex.hpp>
+
+
 #include <memory>
 
 
@@ -11,19 +15,6 @@ namespace ema
 {
 namespace console
 {
-
-
-class ConsoleCommandHandler
-{
-
-};
-
-class EmptyHandler : public ConsoleCommandHandler
-{
-
-};
-
-
 
 class ConsoleCommand
 {
@@ -33,11 +24,22 @@ public:
 	ConsoleCommand();
 	ConsoleCommand(StringRef strCommand);
 	void init(var::VariableProcessor::Ptr);
-
+	void init();
+	String str(var::ContextBase& context = var::EmptyContext());
 };
 
 
+
 }//console
+namespace var
+{
+template<>
+class Context<console::ConsoleCommand> : public ContextBase
+{
+public:
+	Context(FileNameRef);
+};
+}//var
 }//ema
 
 

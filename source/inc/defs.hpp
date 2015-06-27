@@ -10,6 +10,7 @@ namespace ema
 typedef std::wstring	    String;
 typedef const String&	    StringRef;
 typedef String			    FileName;
+typedef const FileName&	    FileNameRef;
 typedef std::vector<String> StringList;
 typedef const StringList&   StringListRef;
 typedef std::wiostream      PackDataStream;

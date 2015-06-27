@@ -2,10 +2,13 @@
 
 #include "file_tools.hpp"
 
+
+
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/locale.hpp>
+#include <boost/interprocess/sync/scoped_lock.hpp>
 
 using namespace ema;
 using namespace pack;
@@ -76,7 +79,7 @@ bool CustomPacker::isCorrectFile(const FileName& fileName, PackDataStream& strea
 int CustomPacker::runCommand(CommandsId commandId, var::ContextBase& context, console::ConsoleCommandHandler& handler)
 {
 	int result = 0;
-	SemaforeExecutorManager::getInstance().
-		execute(pack, [&](){  result = m_commands[commandId].execute(context, handler);});	
+	//boost::interprocess::scoped_lock<decltype(m_CommandMutex)> lock(m_CommandMutex);
+	result = m_console.execute(m_commands[commandId], context, handler);
 	return result;
 }
