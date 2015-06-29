@@ -38,6 +38,7 @@ class Context<console::ConsoleCommand> : public ContextBase
 {
 public:
 	Context(FileNameRef);
+	virtual VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list = ModificatorsList(), bool ignore_mod_for_empty = true){ return L""; }
 };
 }//var
 }//ema

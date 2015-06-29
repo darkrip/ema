@@ -11,6 +11,13 @@ namespace console
 
 
 struct ConsoleTermData;
+class ConsoleAsyncManager;
+
+class RunCommandExpection : public std::exception
+{
+
+};
+
 
 class ConsoleCommandHandler
 {
@@ -30,10 +37,11 @@ class ConsoleTerm
 public:
 	typedef int	CommandResult;
 	ConsoleTerm();
-	void init(StringRef locale, bool is_debug);
+	void init(StringRef locale, bool is_debug, int max_exec_time);
 	CommandResult execute(StringRef command, ConsoleCommandHandler& hadler = EmptyHandler());
 private:
 	std::shared_ptr<ConsoleTermData> m_data;
+	static ConsoleAsyncManager m_asyncManager;
 };
 
 

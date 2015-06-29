@@ -1,6 +1,7 @@
 ﻿
 
 #include "console_command.hpp"
+#include "console_term.hpp"
 
 #include "defs.hpp"
 
@@ -8,7 +9,7 @@
 
 #include <string>
 #include <iostream>
-
+#include "windows.h"
 
 class TestConsoleCommandHandler : public ema::console::ConsoleCommandHandler
 {
@@ -35,11 +36,8 @@ bool test(const std::wstring& locale, const std::wstring& command, const std::ws
 	{
 		ema::console::ConsoleTerm console;
 		console.init(locale, false);
-		ema::console::ConsoleCommand command(command);
-		command.init();
 		TestConsoleCommandHandler handler;
-		ema::var::EmptyContext context;
-		result = console.execute(command, context, handler);
+		result = console.execute(command, handler);
 		output_result = handler.getResult();
 	}
 	catch (std::exception&)
@@ -63,22 +61,31 @@ struct TestConfig
 
 bool run_test(int id, const TestConfig& config)
 {
+	std::stringstream s;
+	bool result = false;
+
 	if (test(config.locale, config.command, config.expectedOutput, config.expectedResult, config.wrongCommand))
 	{
-		std::cout << "test " << id << " passed" << std::endl;
-		return true;
+		s << "test " << id << " passed" << std::endl;
+		result = true;
 	}
 	else
 	{
-		std::cout << "test " << id << " failed" << std::endl;
-		return false;
+		s << "test " << id << " failed" << std::endl;
 	}
+	OutputDebugStringA(s.str().c_str());
+	std::cout << s.str();
+	return result;
 }
 
 
-
-int main(int, char**)
+//int main(int, char**)
+int __stdcall WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd )
 {
+
+	wchar_t buff[1024];
+	GetCurrentDirectoryW(1024, buff);
+
 	/*
 	consoleTest1.bat
 		Tegra Tagra [args]
@@ -94,14 +101,14 @@ int main(int, char**)
 
 	TestConfig testConfigs[] = {
 		{ L"C",      L"echo For the KKK",      L"For the KKK",             0,  false },
-		{ L"C",      L"consoleTest1 Tygra",    L"Tegra Tagra Tygra",       0,  false },
-		{ L"C",      L"consoleTest2 гипотеза", L"теорма аксиома гипотеза", 0,  false },
-		{ L"UTF-16", L"consoleTest3 гипотеза", L"теорма аксиома гипотеза", 0,  false },
-		{ L"UTF-16", L"consoleTest3 仮説",     L"定理公理 仮説",            0,  false },
-		{ L"UTF-8",  L"consoleTest4 仮説",     L"定理公理 仮説",            0,  false },
-		{ L"UTF-99", L"consoleTest4 仮説",     L"定理公理 仮説",            0,  true  },
-		{ L"C",      L"consoleTest5 17",       L"",                        17, false },
-		{ L"C",      L"wrongcommand17157sx",   L"",                        0,  true  },
+		{ L"C",      L"consoleTest1.bat Tygra",    L"Tegra Tagra Tygra",       0,  false },
+		{ L"C",      L"consoleTest2.bat гипотеза", L"теорма аксиома гипотеза", 0,  false },
+		{ L"UTF-16", L"consoleTest3.bat гипотеза", L"теорма аксиома гипотеза", 0,  false },
+		{ L"UTF-16", L"consoleTest3.bat 仮説",     L"定理公理 仮説",            0,  false },
+		{ L"UTF-8",  L"consoleTest4.bat 仮説",     L"定理公理 仮説",            0,  false },
+		{ L"UTF-99", L"consoleTest4.bat 仮説",     L"定理公理 仮説",            0,  true  },
+		{ L"C",      L"consoleTest5.bat 17",       L"",                        17, false },
+		{ L"C",      L"wrongcommand17157sx.bat",   L"",                        0,  true  },
 	};
 
 	int result = 0;

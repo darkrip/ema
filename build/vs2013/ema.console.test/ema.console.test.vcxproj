@@ -90,10 +90,13 @@ exit 0</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\src\console_command.cpp" />
+    <ClCompile Include="..\..\..\source\src\console_term.cpp" />
     <ClCompile Include="..\..\..\source\test\ema.console.test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\source\external\darktools\inc\encoding_converter.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
+    <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
     <ClInclude Include="..\..\..\source\inc\defs.hpp" />
     <ClInclude Include="..\..\..\source\inc\variable_processor.hpp" />
   </ItemGroup>

@@ -80,6 +80,7 @@ int CustomPacker::runCommand(CommandsId commandId, var::ContextBase& context, co
 {
 	int result = 0;
 	//boost::interprocess::scoped_lock<decltype(m_CommandMutex)> lock(m_CommandMutex);
-	result = m_console.execute(m_commands[commandId], context, handler);
+	String str_command = m_commands[commandId].str(context);
+	result = m_console.execute(str_command, handler);
 	return result;
 }

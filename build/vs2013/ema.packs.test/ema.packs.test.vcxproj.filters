@@ -33,6 +33,9 @@
     <ClCompile Include="..\..\..\source\src\console_command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\src\console_term.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\inc\custom_packs_ini_configurator.hpp">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\inc\variable_processor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\inc\console_term.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

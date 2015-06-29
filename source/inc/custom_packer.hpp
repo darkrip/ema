@@ -6,6 +6,7 @@
 #include "packer.hpp"
 #include "list_command_handler.hpp"
 #include "console_command.hpp"
+#include "console_term.hpp"
 #include "packer_id_list.hpp"
 #include "variable_processor.hpp"
 

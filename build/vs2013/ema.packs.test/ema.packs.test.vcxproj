@@ -91,6 +91,7 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\src\console_command.cpp" />
+    <ClCompile Include="..\..\..\source\src\console_term.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer_factory.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packs_ini_configurator.cpp" />
@@ -99,6 +100,7 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
+    <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer_factory.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packs_ini_configurator.hpp" />
