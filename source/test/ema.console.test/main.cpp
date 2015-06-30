@@ -35,7 +35,7 @@ bool test(const std::wstring& locale, const std::wstring& command, const std::ws
 	try
 	{
 		ema::console::ConsoleTerm console;
-		console.init(locale, false);
+		console.init(locale, false, 10000);
 		TestConsoleCommandHandler handler;
 		result = console.execute(command, handler);
 		output_result = handler.getResult();
