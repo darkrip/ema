@@ -2,6 +2,9 @@
 
 #include "encoding_converter.hpp"
 
+#include "handle_wraper_win.hpp"
+#include "exit_scope.hpp"
+
 #include <boost/assert.hpp>
 #include <boost/thread.hpp>
 
@@ -19,12 +22,22 @@ class ema::console::ConsoleAsyncManager
 		Task(){}
 		Task(const std::function<bool()>& function):m_function(function){}
 
+		std::exception_ptr& getResult(){ return m_exeption; }
+
 		void operator()()
 		{
-			while(m_function());
+			try
+			{
+				while(m_function());
+			}
+			catch (...)
+			{
+				m_exeption = std::current_exception();
+			}
 		}
 	private:
 		std::function<bool()> m_function;
+		std::exception_ptr    m_exeption;
 	};
 public:
 	class AsyncHandler
@@ -33,6 +46,12 @@ public:
 		typedef std::shared_ptr<AsyncHandler> Ptr;
 		AsyncHandler(){}
 		void join(){ m_threadGroup.join_all(); }
+		void checkExeption(){
+			if (m_writeTask.getResult())
+				std::rethrow_exception(m_readTask.getResult());
+			if (m_readTask.getResult())
+				std::rethrow_exception(m_readTask.getResult());
+		}
 	private:
 		friend class ConsoleAsyncManager;
 		boost::thread_group m_threadGroup;
@@ -63,7 +82,6 @@ struct ema::console::ConsoleTermData
 	int m_maxExecTime;
 };
 
-#include <iostream>
 ConsoleAsyncManager::AsyncHandler::Ptr
 	ConsoleAsyncManager::createHandler(ConsoleCommandHandler& handler, hd::tools::EncodingConverter& converter, HANDLE outputReadPipe, HANDLE inputWritePipe)
 {
@@ -77,7 +95,6 @@ ConsoleAsyncManager::AsyncHandler::Ptr
 				buffer.resize(bufferSize);
 				char* p_buffer = &buffer[0];
 				BOOL result = ReadFile(outputReadPipe, p_buffer, bufferSize, &reallyReaded, NULL);
-				std::cout << "Error:" << GetLastError() << std::endl;
 				if(!result)
 					return false;
 				buffer.resize(reallyReaded);
@@ -96,8 +113,6 @@ ConsoleAsyncManager::AsyncHandler::Ptr
 				DWORD length;
 				BOOL result = WriteFile(inputWritePipe, buffer.c_str(), sizeof(buffer[0])*buffer.size(), &length, NULL);
 
-				std::cout << "Error:" << GetLastError() << std::endl;
-
 				return !!result;
 			});
 
@@ -106,6 +121,61 @@ ConsoleAsyncManager::AsyncHandler::Ptr
 }
 
 
+void ConsoleCommandLinesHandler::flush()
+{
+	if (!m_writeCache.empty())
+		writeLine(m_writeCache);
+	m_writeCache.clear();
+}
+
+void ConsoleCommandLinesHandler::output(StringRef input)
+{
+	m_writeCache += input;
+
+	String::size_type pos;
+	while ((pos = m_writeCache.find_first_of(L'\n')) != String::npos)
+	{
+		String::size_type possend = pos;
+		if (possend > 0 && m_writeCache[possend-1] == L'\r')
+			--possend;
+
+		String tosend = m_writeCache.substr(0, possend);
+		m_writeCache.erase(0, pos + 1);
+		writeLine(tosend);
+	}
+}
+
+String ConsoleCommandLinesHandler::input()
+{
+	String result;
+	if (m_readCache.empty())
+		result = readLine();
+	else
+	{
+		result = m_readCache;
+		m_readCache.clear();
+	}
+
+	if (!result.empty())
+	{
+		String::size_type pos = result.find_first_of(L'\n');
+
+		if (pos == String::npos)
+		{
+			result += L"\n";
+		}
+		else
+		{
+			String::size_type end_pos = pos+1;
+			if (pos + 1 < result.size())
+			{
+				m_readCache = result.substr(pos + 1);
+				result.erase(pos + 1);
+			}
+		}
+	}
+	return result;
+}
 
 
 ConsoleTerm::ConsoleTerm()
@@ -125,25 +195,27 @@ void ConsoleTerm::init(StringRef locale, bool isDebug, int max_exec_time)
 ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, ConsoleCommandHandler& handler /* = EmptyHandler() */)
 {
 	BOOST_ASSERT(!!m_data);
+	using namespace hd::tools;
 
 	size_t size = command.size() + 1;
 	wchar_t* p_command = new wchar_t[size];
 	wcscpy_s(p_command, size, command.c_str());
-
-	HANDLE m_inputReadPipe;
-	HANDLE m_inputWritePipe;
-
-	HANDLE m_outputReadPipe;
-	HANDLE m_outputWritePipe;
+	EXIT_SCOPE({ delete[] p_command; });
 
 	SECURITY_ATTRIBUTES sa = { 0 };
 	sa.nLength = sizeof(sa);
 	sa.bInheritHandle = TRUE;
 	sa.lpSecurityDescriptor = NULL;
 
+	HANDLE tmp_handle1, tmp_handle2;
 
-	BOOST_VERIFY(CreatePipe(&m_inputReadPipe, &m_inputWritePipe, &sa, 0) != 0);
-	BOOST_VERIFY(CreatePipe(&m_outputReadPipe, &m_outputWritePipe, &sa, 0) != 0);
+	BOOST_VERIFY(CreatePipe(&tmp_handle1, &tmp_handle2, &sa, 0) != 0);
+	HHANDLE inputReadPipe(tmp_handle1);
+	HHANDLE inputWritePipe(tmp_handle2);
+
+	BOOST_VERIFY(CreatePipe(&tmp_handle1, &tmp_handle2, &sa, 0) != 0);
+	HHANDLE outputReadPipe(tmp_handle1);
+	HHANDLE outputWritePipe(tmp_handle2);
 
 	STARTUPINFOW        si = { 0 };
 	PROCESS_INFORMATION pi = { 0 };
@@ -151,41 +223,36 @@ ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, ConsoleComman
 	si.cb = sizeof(si);
 	si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
 	si.wShowWindow = SW_HIDE;
-	si.hStdInput = m_inputReadPipe;
-	si.hStdOutput = m_outputWritePipe;
-	si.hStdError = m_outputWritePipe;
+	si.hStdInput = inputReadPipe.impl();
+	si.hStdOutput = outputWritePipe.impl();
+	si.hStdError = outputWritePipe.impl();
 
-	auto operation_handler = m_asyncManager.createHandler(handler, m_data->m_converter, m_outputReadPipe, m_inputWritePipe);
+	auto operation_handler = m_asyncManager.createHandler(handler, m_data->m_converter, outputReadPipe.impl(), inputWritePipe.impl());
 
 	if (!CreateProcessW(NULL, p_command, NULL, NULL, TRUE, 0/*CREATE_NEW_PROCESS_GROUP*/, NULL, NULL, &si, &pi))
 	{
 		throw RunCommandExpection();
 	}
 
+	HHANDLE command_thread(pi.hThread);
+	HHANDLE command_process(pi.hProcess);
+
 	DWORD wait_result = WaitForSingleObject(pi.hProcess, m_data->m_maxExecTime);
 
 	if(wait_result != WAIT_OBJECT_0)
 	{
-		TerminateProcess(pi.hProcess, -1);
+		TerminateProcess(command_process.impl(), -1);
 		throw RunCommandExpection();
 	}
 
 	ConsoleTerm::CommandResult result = -1;
-	GetExitCodeProcess(pi.hProcess, &result);
+	GetExitCodeProcess(command_process.impl(), &result);
 
-	CloseHandle(m_inputReadPipe);
-	CloseHandle(m_outputWritePipe);
+	inputReadPipe.close();
+	outputWritePipe.close();
 
 	operation_handler->join();
-
-	CloseHandle(m_outputReadPipe);
-	CloseHandle(m_inputWritePipe);
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
-
-
-	
-
+	operation_handler->checkExeption();
 
 	return result;
 

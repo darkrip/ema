@@ -89,12 +89,15 @@ exit 0</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\external\darktools\src\encoding_converter.cpp" />
     <ClCompile Include="..\..\..\source\src\console_command.cpp" />
     <ClCompile Include="..\..\..\source\src\console_term.cpp" />
     <ClCompile Include="..\..\..\source\test\ema.console.test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\external\darktools\inc\encoding_converter.hpp" />
+    <ClInclude Include="..\..\..\source\external\darktools\inc\handle_wraper.hpp" />
+    <ClInclude Include="..\..\..\source\external\darktools\inc\handle_wraper_win.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
     <ClInclude Include="..\..\..\source\inc\defs.hpp" />

@@ -63,16 +63,12 @@ void EncodingConverter::from(const EncodingConverter::BufferType& input, Encodin
 		const char* begin = (char*)&input[0];
 		const char* end = ((char*)&input[input.size()-1])+1;
 
-		std::locale stdloca(m_encoding);
-		int x =  stdloca.none;
-
-
 		std::wstring buffer;
 		
 		if(m_useStdLocale)
 		{
 			auto& facet = std::use_facet<std::codecvt<wchar_t,char,std::mbstate_t> >(m_locale);
-			std::mbstate_t state;
+			std::mbstate_t state=0;
 
 			const char* from_next;                            // from_next
 			wchar_t* to_next;                              // to_next
@@ -84,7 +80,7 @@ void EncodingConverter::from(const EncodingConverter::BufferType& input, Encodin
 			buffer.resize(to_next-&buffer[0]);
 		}
 		else
-			buffer = boost::locale::conv::to_utf<wchar_t>(std::string(begin, end), m_encoding);
+			buffer = boost::locale::conv::to_utf<wchar_t>(begin, end, m_encoding);
 		output = ToBufferType(buffer);
 	}
 	

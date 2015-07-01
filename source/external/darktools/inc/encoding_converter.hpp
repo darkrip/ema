@@ -55,7 +55,11 @@ private:
 		if(input.size()==0)
 			return Output();
 		const unsigned char* ubegin = &input[0];
-		const unsigned char* uend = ubegin + input.size()*sizeof(input[0]);
+		const unsigned char* uend = ubegin + input.size()*sizeof(BufferType::value_type);
+
+		while ((uend - ubegin) % sizeof(Output::value_type))
+			--uend;
+
 		return Output((Output::value_type*)ubegin, (Output::value_type*)uend);
 	}
 

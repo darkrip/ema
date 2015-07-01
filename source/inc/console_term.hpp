@@ -32,6 +32,23 @@ class EmptyHandler : public ConsoleCommandHandler
 	virtual String input(){ return L""; }
 };
 
+class ConsoleCommandLinesHandler : public ConsoleCommandHandler
+{
+protected:
+	virtual String readLine()=0;
+	virtual void writeLine(StringRef) = 0;
+	void flush();
+	~ConsoleCommandLinesHandler(){ flush(); }
+private:
+	virtual void output(StringRef);
+	virtual String input();
+
+	String m_readCache;
+	String m_writeCache;
+};
+
+
+
 class ConsoleTerm
 {
 public:

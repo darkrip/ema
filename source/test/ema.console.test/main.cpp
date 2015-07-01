@@ -11,18 +11,21 @@
 #include <iostream>
 #include "windows.h"
 
-class TestConsoleCommandHandler : public ema::console::ConsoleCommandHandler
+class TestConsoleCommandHandler : public ema::console::ConsoleCommandLinesHandler
 {
 public:
-	virtual void output(ema::StringRef str)
+	virtual void writeLine(ema::StringRef str)
 	{
 		if (m_result.empty())
-			m_result = str.substr(0, str.length()-1);
+			m_result = str;
 		else
+		{
+			m_result += L"\n";
 			m_result += str;
+		}
 	}
-	virtual ema::String input(){ return L""; }
-	ema::String getResult(){ return m_result; }
+	virtual ema::String readLine(){ return L""; }
+	ema::String getResult(){ flush(); return m_result; }
 private:
 	ema::String m_result;
 };
@@ -104,8 +107,8 @@ int main(int, char**)
 	TestConfig testConfigs[] = {
 		{ L"C",      L"echo For the KKK",      L"For the KKK",             0,  false },
 		{ L"C",      L"consoleTest1.bat Tygra",    L"Tegra Tagra Tygra",       0,  false },
-		{ L"C",      L"consoleTest2.bat гипотеза", L"теорма аксиома гипотеза", 0,  false },
-		{ L"UTF-16", L"consoleTest3.bat гипотеза", L"теорма аксиома гипотеза", 0,  false },
+		{ L"cp1251", L"consoleTest2.bat гипотеза", L"теорма аксиома гипотеза", 0,  false },
+		{ L"UTF-16", L"consoleTest6.bat гипотеза", L"теорма аксиома гипотеза", 0,  false },
 		{ L"UTF-16", L"consoleTest3.bat 仮説",     L"定理公理 仮説",            0,  false },
 		{ L"UTF-8",  L"consoleTest4.bat 仮説",     L"定理公理 仮説",            0,  false },
 		{ L"UTF-99", L"consoleTest4.bat 仮説",     L"定理公理 仮説",            0,  true  },
