@@ -24,6 +24,9 @@
     <ClCompile Include="..\..\..\source\test\ema.console.test\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\external\darktools\src\encoding_converter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\source\test\ema.console.test\test.data\consoleTest3.data" />
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\inc\variable_processor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\external\darktools\inc\encoding_converter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

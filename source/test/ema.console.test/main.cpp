@@ -16,8 +16,10 @@ class TestConsoleCommandHandler : public ema::console::ConsoleCommandHandler
 public:
 	virtual void output(ema::StringRef str)
 	{
-		if (!m_result.empty())m_result += L"\n";
-		m_result += str;
+		if (m_result.empty())
+			m_result = str.substr(0, str.length()-1);
+		else
+			m_result += str;
 	}
 	virtual ema::String input(){ return L""; }
 	ema::String getResult(){ return m_result; }
@@ -79,8 +81,8 @@ bool run_test(int id, const TestConfig& config)
 }
 
 
-//int main(int, char**)
-int __stdcall WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd )
+int main(int, char**)
+//int __stdcall WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd )
 {
 
 	wchar_t buff[1024];

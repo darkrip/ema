@@ -35,7 +35,7 @@ class EmptyHandler : public ConsoleCommandHandler
 class ConsoleTerm
 {
 public:
-	typedef int	CommandResult;
+	typedef unsigned long CommandResult;
 	ConsoleTerm();
 	void init(StringRef locale, bool is_debug, int max_exec_time);
 	CommandResult execute(StringRef command, ConsoleCommandHandler& hadler = EmptyHandler());

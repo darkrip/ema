@@ -43,11 +43,15 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(SolutionDir)..\..\source\external\boost;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\..\source\external\boost\stage\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)..\..\output\tests\</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2012\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(SolutionDir)..\..\source\external\boost;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\..\source\external\boost\stage\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)..\..\output\tests\</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2012\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,6 +65,15 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)" mkdir "$(SolutionDir)..\..\output\tests\$(ProjectName)"
+if exist "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" robocopy "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.*
+IF %ERRORLEVEL% GEQ 8 exit 1
+exit 0</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Create test folders</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -80,6 +93,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\external\darktools\src\encoding_converter.cpp" />
     <ClCompile Include="..\..\..\source\src\console_term.cpp" />
     <ClCompile Include="..\..\..\source\test\ema.console.test\main.cpp" />
   </ItemGroup>
@@ -92,6 +106,7 @@
     <None Include="..\..\..\source\test\ema.console.test\test.data\consoleTest5.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\source\external\darktools\inc\encoding_converter.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
     <ClInclude Include="..\..\..\source\inc\defs.hpp" />
