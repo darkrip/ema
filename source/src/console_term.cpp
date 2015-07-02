@@ -19,8 +19,11 @@ class ema::console::ConsoleAsyncManager
 	class Task
 	{
 	public:
+		typedef std::shared_ptr<Task> Ptr;
+
 		Task(){}
-		Task(const std::function<bool()>& function):m_function(function){}
+		~Task(){}
+		Task(std::function<bool()> function):m_function(function){}
 
 		std::exception_ptr& getResult(){ return m_exeption; }
 
@@ -47,26 +50,26 @@ public:
 		AsyncHandler(){}
 		void join(){ m_threadGroup.join_all(); }
 		void checkExeption(){
-			if (m_writeTask.getResult())
-				std::rethrow_exception(m_readTask.getResult());
-			if (m_readTask.getResult())
-				std::rethrow_exception(m_readTask.getResult());
+			if (m_writeTask->getResult())
+				std::rethrow_exception(m_readTask->getResult());
+			if (m_readTask->getResult())
+				std::rethrow_exception(m_readTask->getResult());
 		}
 	private:
 		friend class ConsoleAsyncManager;
 		boost::thread_group m_threadGroup;
-		Task m_readTask;
-		Task m_writeTask;
+		Task::Ptr m_readTask;
+		Task::Ptr m_writeTask;
 
 	};
 	AsyncHandler::Ptr createHandler(ConsoleCommandHandler& handler, hd::tools::EncodingConverter& converter, HANDLE outputReadPipe, HANDLE inputWritePipe);
 private:
 
 	template<typename Functor>
-	Task createTask(AsyncHandler& ahandler, Functor & functor)
+	Task::Ptr createTask(AsyncHandler& ahandler, Functor& functor)
 	{
-		Task task(functor);
-		ahandler.m_threadGroup.create_thread(task);
+		Task::Ptr task(new Task(functor));
+		ahandler.m_threadGroup.create_thread(boost::ref(*task));
 		return task;
 	}
 };
@@ -102,7 +105,7 @@ ConsoleAsyncManager::AsyncHandler::Ptr
 				return true;
 			});
 
-		result->m_readTask = createTask(*result, [inputWritePipe, &handler, &converter]()->bool
+	result->m_writeTask = createTask(*result, [inputWritePipe, &handler, &converter]()->bool
 			{
 				String str = handler.input();
 				if(str.empty())
@@ -237,10 +240,11 @@ ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, ConsoleComman
 	HHANDLE command_thread(pi.hThread);
 	HHANDLE command_process(pi.hProcess);
 
-	DWORD wait_result = WaitForSingleObject(pi.hProcess, m_data->m_maxExecTime);
+	DWORD wait_result = WaitForSingleObject(command_process.impl(), m_data->m_maxExecTime);
 
 	if(wait_result != WAIT_OBJECT_0)
 	{
+		//TODO: Kill process and all childs
 		TerminateProcess(command_process.impl(), -1);
 		throw RunCommandExpection();
 	}

@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{AB7501BE-0C82-4446-8F33-57E61AA8A943}</ProjectGuid>
+    <ProjectGuid>{EF64B6C3-CF9B-48AE-9E03-EA87D887FF18}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>emaconsoletest</RootNamespace>
+    <RootNamespace>ematoolsfiletype</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,16 +41,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(SolutionDir)..\..\source\external\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\..\source\external\boost\stage\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)..\..\output\tests\</OutDir>
+    <OutDir>$(SolutionDir)..\..\source\test\$(ProjectName)\test.data</OutDir>
     <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2012\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(SolutionDir)..\..\source\external\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\..\source\external\boost\stage\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)..\..\output\tests\</OutDir>
+    <OutDir>$(SolutionDir)..\..\source\test\$(ProjectName)\test.data</OutDir>
     <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2012\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -59,22 +55,12 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)" mkdir "$(SolutionDir)..\..\output\tests\$(ProjectName)"
-if exist "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" robocopy "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.*
-robocopy "$(SolutionDir)..\..\source\test\ema.tools.filetype\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.exe
-IF %ERRORLEVEL% GEQ 8 exit 1
-exit 0</Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>Create test folders</Message>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -84,41 +70,17 @@ exit 0</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <PostBuildEvent>
-      <Command>if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)" mkdir "$(SolutionDir)..\..\output\tests\$(ProjectName)"
-if exist "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" robocopy "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.*
-robocopy "$(SolutionDir)..\..\source\test\ema.tools.filetype\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.exe
-IF %ERRORLEVEL% GEQ 8 exit 1
-exit 0</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\source\external\darktools\src\encoding_converter.cpp" />
-    <ClCompile Include="..\..\..\source\src\console_term.cpp" />
-    <ClCompile Include="..\..\..\source\test\ema.console.test\main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\source\test\ema.console.test\test.data\consoleTest1.bat" />
-    <None Include="..\..\..\source\test\ema.console.test\test.data\consoleTest2.bat" />
-    <None Include="..\..\..\source\test\ema.console.test\test.data\consoleTest3.bat" />
-    <None Include="..\..\..\source\test\ema.console.test\test.data\consoleTest3.data" />
-    <None Include="..\..\..\source\test\ema.console.test\test.data\consoleTest4.bat" />
-    <None Include="..\..\..\source\test\ema.console.test\test.data\consoleTest5.bat" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\source\external\darktools\inc\encoding_converter.hpp" />
-    <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
-    <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
-    <ClInclude Include="..\..\..\source\inc\defs.hpp" />
-    <ClInclude Include="..\..\..\source\inc\variable_processor.hpp" />
+    <ClCompile Include="..\..\..\source\test\ema.tools.filetype\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

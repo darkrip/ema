@@ -6,6 +6,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ema.packs.test", "ema.packs.test\ema.packs.test.vcxproj", "{3FFC4278-8DBC-4979-9B55-7F34B5BD93F3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ema.console.test", "ema.console.test\ema.console.test.vcxproj", "{AB7501BE-0C82-4446-8F33-57E61AA8A943}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EF64B6C3-CF9B-48AE-9E03-EA87D887FF18} = {EF64B6C3-CF9B-48AE-9E03-EA87D887FF18}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ema.tools.filetype", "ema.tools.filetype\ema.tools.filetype.vcxproj", "{EF64B6C3-CF9B-48AE-9E03-EA87D887FF18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +30,10 @@ Global
 		{AB7501BE-0C82-4446-8F33-57E61AA8A943}.Debug|Win32.Build.0 = Debug|Win32
 		{AB7501BE-0C82-4446-8F33-57E61AA8A943}.Release|Win32.ActiveCfg = Release|Win32
 		{AB7501BE-0C82-4446-8F33-57E61AA8A943}.Release|Win32.Build.0 = Release|Win32
+		{EF64B6C3-CF9B-48AE-9E03-EA87D887FF18}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EF64B6C3-CF9B-48AE-9E03-EA87D887FF18}.Debug|Win32.Build.0 = Debug|Win32
+		{EF64B6C3-CF9B-48AE-9E03-EA87D887FF18}.Release|Win32.ActiveCfg = Release|Win32
+		{EF64B6C3-CF9B-48AE-9E03-EA87D887FF18}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

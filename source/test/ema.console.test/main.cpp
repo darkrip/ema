@@ -87,38 +87,27 @@ bool run_test(int id, const TestConfig& config)
 int main(int, char**)
 //int __stdcall WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd )
 {
-
-	wchar_t buff[1024];
-	GetCurrentDirectoryW(1024, buff);
-
-	/*
-	consoleTest1.bat
-		Tegra Tagra [args]
-	consoleTest2.bat - OEM
-		теорма аксиома [args]
-	consoleTest3.bat - Utf-16
-		定理公理 [args]
-	consoleTest4.bat - Utf-8
-		定理公理 [args]
-	consoleTest5.bat [args] set error level args
-	*/
-
-
+	//TODO Tests for send walues
 	TestConfig testConfigs[] = {
-		{ L"C",      L"echo For the KKK",      L"For the KKK",             0,  false },
-		{ L"C",      L"consoleTest1.bat Tygra",    L"Tegra Tagra Tygra",       0,  false },
-		{ L"cp1251", L"consoleTest2.bat гипотеза", L"теорма аксиома гипотеза", 0,  false },
-		{ L"UTF-16", L"consoleTest6.bat гипотеза", L"теорма аксиома гипотеза", 0,  false },
-		{ L"UTF-16", L"consoleTest3.bat 仮説",     L"定理公理 仮説",            0,  false },
-		{ L"UTF-8",  L"consoleTest4.bat 仮説",     L"定理公理 仮説",            0,  false },
-		{ L"UTF-99", L"consoleTest4.bat 仮説",     L"定理公理 仮説",            0,  true  },
-		{ L"C",      L"consoleTest5.bat 17",       L"",                        17, false },
-		{ L"C",      L"wrongcommand17157sx.bat",   L"",                        0,  true  },
+	//    encoding  |command                                         |expected result       |exitcode|must throw exeption
+		{ L"C",      L"echo For the XXX",							  L"For the XXX",             0,  false },
+		{ L"C",      L"consoleTest1.bat Tygra",						  L"Tegra Tagra Tygra",       0,  false },
+		{ L"cp1251", L"consoleTest2.bat гипотеза",                    L"теорма аксиома гипотеза", 0,  false },
+		{ L"UTF-16", L"ema.tools.filetype.exe consoleTest6.data",     L"теорма аксиома ",         0,  false },
+		{ L"UTF-16", L"ema.tools.filetype.exe consoleTest3.data",     L"定理公理",                 0,  false },
+		{ L"UTF-8",  L"consoleTest4.bat 仮説",                        L"定理公理 仮説",            0,  false },
+		{ L"UTF-99", L"ema.tools.filetype.exe consoleTest3.data",     L"定理公理",                 0,  true  },
+		{ L"C",      L"consoleTest5.bat 17",                          L"",                        17, false },
+		{ L"C",      L"wrongcommand17157sx.bat",                      L"",                        0,  true  },
 	};
 
 	int result = 0;
 	for (size_t i = 0; i < boost::size(testConfigs); ++i)
 		if (!run_test((int)i, testConfigs[i]))
 			--result;
+
+	if(IsDebuggerPresent())
+		std::cin.get();
+
 	return result;
 }

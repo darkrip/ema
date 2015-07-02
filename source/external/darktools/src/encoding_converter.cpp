@@ -44,11 +44,12 @@ void EncodingConverter::detectEncodingType()
 	try
 	{
 		m_locale = std::locale(m_encoding);
-		std::use_facet<std::codecvt<wchar_t,char,std::mbstate_t> >(m_locale);
+		m_codecvt = &std::use_facet<Codecvt>(m_locale);
 		m_useStdLocale = true;
 	}catch(std::exception&)
 	{
 		m_useStdLocale = false;
+		m_codecvt = NULL;
 	}
 }
 
@@ -67,7 +68,6 @@ void EncodingConverter::from(const EncodingConverter::BufferType& input, Encodin
 		
 		if(m_useStdLocale)
 		{
-			auto& facet = std::use_facet<std::codecvt<wchar_t,char,std::mbstate_t> >(m_locale);
 			std::mbstate_t state=0;
 
 			const char* from_next;                            // from_next
@@ -75,7 +75,7 @@ void EncodingConverter::from(const EncodingConverter::BufferType& input, Encodin
 
 			buffer.resize(input.size()+1);
 			
-			auto myresult = facet.in (state, begin, end, from_next,
+			auto myresult = m_codecvt->in (state, begin, end, from_next,
 				&buffer[0], &buffer[0]+buffer.size(), to_next);
 			buffer.resize(to_next-&buffer[0]);
 		}
@@ -96,9 +96,27 @@ void EncodingConverter::to(const EncodingConverter::BufferType& input, EncodingC
 		std::copy(input.rbegin(), input.rend(), std::back_inserter(output));
 	else
 	{
-		const char* begin = (char*)&input[0];
-		const char* end = ((char*)&input[input.size()-1])+1;
-		std::string buffer = boost::locale::conv::from_utf(begin, end, m_encoding);
+		const wchar_t* begin = (wchar_t*)&input[0];
+		const wchar_t* end = ((wchar_t*)&input[input.size()-1])+1;
+		std::string buffer;
+		if(m_useStdLocale)
+		{
+			std::mbstate_t state=0;
+
+			const wchar_t* from_next;                            // from_next
+			char* to_next;                              // to_next
+
+			buffer.resize(input.size()+1);
+
+			auto myresult = m_codecvt->out (state, begin, end, from_next,
+				&buffer[0], &buffer[0]+buffer.size(), to_next);
+			buffer.resize(to_next-&buffer[0]);
+		}
+		else
+			buffer = boost::locale::conv::from_utf(begin, end, m_encoding);
+
+
+
 		output = ToBufferType(buffer);
 	}
 }

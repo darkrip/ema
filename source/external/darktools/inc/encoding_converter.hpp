@@ -68,6 +68,8 @@ private:
 	void detectEncodingType();
 	enum ConvertType{ ctSingle, ctMultyByte, ctMultyByteRevers } m_coverType;
 	bool m_useStdLocale;
+	typedef std::codecvt<wchar_t,char,std::mbstate_t> Codecvt;
+	const Codecvt* m_codecvt;
 	std::locale m_locale;
 	std::string m_encoding;
 };
