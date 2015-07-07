@@ -195,7 +195,7 @@ void ConsoleTerm::init(StringRef locale, bool isDebug, int max_exec_time)
 
 
 
-ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, ConsoleCommandHandler& handler /* = EmptyHandler() */)
+ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, StringRef work_dir, ConsoleCommandHandler& handler /* = EmptyHandler() */)
 {
 	BOOST_ASSERT(!!m_data);
 	using namespace hd::tools;
@@ -232,7 +232,7 @@ ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, ConsoleComman
 
 	auto operation_handler = m_asyncManager.createHandler(handler, m_data->m_converter, outputReadPipe.impl(), inputWritePipe.impl());
 
-	if (!CreateProcessW(NULL, p_command, NULL, NULL, TRUE, 0/*CREATE_NEW_PROCESS_GROUP*/, NULL, NULL, &si, &pi))
+	if (!CreateProcessW(NULL, p_command, NULL, NULL, TRUE, 0/*CREATE_NEW_PROCESS_GROUP*/, NULL, work_dir.c_str(), &si, &pi))
 	{
 		throw RunCommandExpection();
 	}
