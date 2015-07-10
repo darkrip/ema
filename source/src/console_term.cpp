@@ -7,6 +7,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/thread.hpp>
+#include <boost/interprocess/sync/scoped_lock.hpp>
 
 #include <windows.h>
 
@@ -198,6 +199,7 @@ void ConsoleTerm::init(StringRef locale, bool isDebug, int max_exec_time)
 ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, StringRef work_dir, ConsoleCommandHandler& handler /* = EmptyHandler() */)
 {
 	BOOST_ASSERT(!!m_data);
+	boost::interprocess::scoped_lock<decltype(m_CommandMutex)> lock(m_CommandMutex);
 	using namespace hd::tools;
 
 	size_t size = command.size() + 1;

@@ -8,7 +8,6 @@
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/locale.hpp>
-#include <boost/interprocess/sync/scoped_lock.hpp>
 
 using namespace ema;
 using namespace pack;
@@ -27,7 +26,7 @@ void CustomPacker::init()
 {
 	initVariables();//Variable processor must be inited before commands
 
-	BOOST_FOREACH( console::ConsoleCommand& cc, m_commands )
+	BOOST_FOREACH( var::ConsoleCommand& cc, m_commands )
 		cc.init(m_variableProcessor);
 
 }
@@ -36,12 +35,24 @@ void CustomPacker::init()
 
 void CustomPacker::initVariables()
 {
-	BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"A", boost::bind(&PackFile::getPackFullPatch, _1)) != var::VariableProcessor::wrongIndex);
-	BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"a", boost::bind(&hd::tools::shortPathCreator, boost::bind(&PackFile::getPackFullPatch, _1))) != var::VariableProcessor::wrongIndex);
+/*
+BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"A", boost::bind(&PackFile::getPackFullPatch, _1)) != var::VariableProcessor::wrongIndex);
+BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"a", boost::bind(&hd::tools::shortPathCreator, boost::bind(&PackFile::getPackFullPatch, _1))) != var::VariableProcessor::wrongIndex);
+//TODO: maybe tmp folder must be unique for every command
+BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"W", boost::bind(&PackFile::getTmpFolder, _1)) != var::VariableProcessor::wrongIndex);
+//TODO: maybe should to move it into shared data
+BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"P", boost::bind(&PackFile::getPassword, _1)) != var::VariableProcessor::wrongIndex);
+
+*/
+
+
+
+	BOOST_VERIFY(m_variableProcessor->registerVar(L"A") != var::VariableProcessor::wrongIndex);
+	BOOST_VERIFY(m_variableProcessor->registerVar(L"a") != var::VariableProcessor::wrongIndex);
 	//TODO: maybe tmp folder must be unique for every command
-	BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"W", boost::bind(&PackFile::getTmpFolder, _1)) != var::VariableProcessor::wrongIndex);
+	BOOST_VERIFY(m_variableProcessor->registerVar(L"W") != var::VariableProcessor::wrongIndex);
 	//TODO: maybe should to move it into shared data
-	BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"P", boost::bind(&PackFile::getPassword, _1)) != var::VariableProcessor::wrongIndex);
+	BOOST_VERIFY(m_variableProcessor->registerVar(L"P") != var::VariableProcessor::wrongIndex);
 
 /*
 
@@ -67,7 +78,7 @@ bool CustomPacker::isCorrectFile(const FileName& fileName, PackDataStream& strea
 	if(!m_ids.isCorrect(stream))
 		return false;
 
-	var::Context<console::ConsoleCommand> context(fileName);
+	var::CommandContext context(fileName);
 	if(runCommand(ciIsArchive, context)!=0)
 		return false;
 
@@ -79,8 +90,7 @@ bool CustomPacker::isCorrectFile(const FileName& fileName, PackDataStream& strea
 int CustomPacker::runCommand(CommandsId commandId, var::ContextBase& context, console::ConsoleCommandHandler& handler)
 {
 	int result = 0;
-	//boost::interprocess::scoped_lock<decltype(m_CommandMutex)> lock(m_CommandMutex);
 	String str_command = m_commands[commandId].str(context);
-	result = m_console.execute(str_command, handler);
+	result = m_console.execute(str_command, m_commands[commandId].work_dir(), handler);
 	return result;
 }

@@ -13,7 +13,7 @@
 
 namespace ema
 {
-namespace console
+namespace var
 {
 
 class ConsoleCommand
@@ -26,19 +26,14 @@ public:
 	void init(var::VariableProcessor::Ptr);
 	void init();
 	String str(var::ContextBase& context = var::EmptyContext());
+	String work_dir(var::ContextBase& context = var::EmptyContext());
 };
 
 
-
-}//console
-namespace var
-{
-template<>
-class Context<console::ConsoleCommand> : public ContextBase
+class CommandContext : public ContextBase
 {
 public:
-	Context(FileNameRef);
-	virtual VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list = ModificatorsList(), bool ignore_mod_for_empty = true){ return L""; }
+	CommandContext(FileNameRef);
 };
 }//var
 }//ema

@@ -56,9 +56,6 @@
     <ClInclude Include="..\..\..\source\inc\defs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\inc\variable_processor.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\source\external\darktools\inc\encoding_converter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

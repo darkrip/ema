@@ -5,13 +5,15 @@
 #include "defs.hpp"
 
 #include <memory>
-
+#include <functional>
 
 namespace ema
 {
 namespace var
 {
 
+class VariableProcessor;
+class ContextBase;
 
 
 class VariableBase
@@ -30,37 +32,52 @@ class Variable : public VariableBase
 {
 };
 
+
 class VariableModificatorBase
 {
 public:
+	typedef std::shared_ptr<VariableModificatorBase> Ptr;
+	typedef const VariableModificatorBase&           Ref;
 	typedef size_t Id;
+	virtual void modify(VariableBase::Value, VariableBase::Id, const ContextBase&)=0;
 };
 
 
 typedef std::vector<VariableModificatorBase::Id> ModificatorsList;
+typedef std::weak_ptr<VariableProcessor> VariableProcessorLPtr;
+typedef std::shared_ptr<VariableProcessor> VariableProcessorPtr;
+
+
+class VariableNotExistInCurrentContext : public std::exception
+{
+public:
+	VariableNotExistInCurrentContext(VariableBase::Id, const VariableProcessorPtr&){}
+};
 
 
 class ContextBase
 {
 public:
-	virtual VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list=ModificatorsList(), bool ignore_mod_for_empty=true)=0;
+	typedef std::shared_ptr<ContextBase> Ptr;
+	typedef std::weak_ptr<ContextBase> LPtr;
+	typedef std::function<void(void)> Getter;
+
+	VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list=ModificatorsList(), bool ignore_mod_for_empty=true);
+	ContextBase::Ptr getParent(){ return m_parent.lock(); }
+	VariableProcessorPtr getOwner(){ return m_owner.lock(); }
+	bool isExist(VariableBase::Id)const;
+protected:
+	bool registerGetter(VariableBase::Id, const Getter&);
+
+
+private:
+	LPtr m_parent;
+	VariableProcessorLPtr m_owner;
 };
 
 
 class EmptyContext : public ContextBase
-{
-public:
-	virtual VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list = ModificatorsList(), bool ignore_mod_for_empty = true){ return L""; }
-};
-
-
-template<typename ContextHolder>
-class Context : public ContextBase
-{
-public:
-};
-
-
+{};
 
 
 class VariableProcessor
@@ -71,23 +88,14 @@ public:
 
 	void init();
 
-	template< typename ContextHolder, typename Getter >
-	VariableBase::Id registerVar(VariableBase::NameRef, const Getter& );
-	VariableBase::Id findVar(VariableBase::NameRef);
-	const VariableBase&      getVariable(VariableBase::Id);
+	VariableBase::Id    registerVar(VariableBase::NameRef);
+	VariableBase::Id    findVar(VariableBase::NameRef);
+
+	VariableModificatorBase::Id registerModificator(VariableBase::NameRef, VariableModificatorBase::Ptr);
+	VariableModificatorBase::Id findModificator(VariableBase::NameRef);
+	VariableModificatorBase::Ref getModificator(VariableModificatorBase::Id);	
 };
 //-----------------------------------------------------------------------------------
-
-template< typename ContextHolder, typename Getter >
-VariableBase::Id VariableProcessor::registerVar(VariableBase::NameRef name, const Getter& getter )
-{
-	return 	wrongIndex;
-}
-
-
-
-
-
 
 
 

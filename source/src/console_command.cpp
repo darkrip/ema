@@ -6,3 +6,9 @@ using namespace console;
 
 
 
+
+String str(var::ContextBase& context = var::EmptyContext());
+
+
+
+String work_dir(var::ContextBase& context = var::EmptyContext());

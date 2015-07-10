@@ -59,7 +59,7 @@ private:
 	bool       m_debug;
 	
 	var::VariableProcessor::Ptr m_variableProcessor;
-	console::ConsoleCommand m_commands[ciLastCommand];
+	var::ConsoleCommand m_commands[ciLastCommand];
 	console::ListCommandHandler m_listCommandHandler;
 	String m_inputString;
 

@@ -33,6 +33,15 @@
     <ClCompile Include="..\..\..\source\src\custom_packer_factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\src\variable_processor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\src\console_term.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\external\darktools\src\encoding_converter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\source\test\ema.packs.test\test.data\list_command.bat">
@@ -104,6 +113,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\external\darktools\inc\file_tools.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\inc\console_term.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

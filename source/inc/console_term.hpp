@@ -2,6 +2,7 @@
 #define __CONSOLE_TERM_HPP__
 
 #include "defs.hpp"
+#include <boost/thread/mutex.hpp>
 #include <memory>
 
 namespace ema
@@ -54,12 +55,12 @@ class ConsoleTerm
 public:
 	typedef unsigned long CommandResult;
 	ConsoleTerm();
-	void init(StringRef locale, StringListRef additional_path, bool is_debug, int max_exec_time);
+	void init(StringRef locale, bool is_debug, int max_exec_time);
 	CommandResult execute(StringRef command, StringRef work_dir, ConsoleCommandHandler& hadler = EmptyHandler());
 private:
 	std::shared_ptr<ConsoleTermData> m_data;
 	static ConsoleAsyncManager       m_asyncManager;
-	StringList					     m_additionalPath;
+	boost::mutex m_CommandMutex;
 };
 
 

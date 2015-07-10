@@ -78,10 +78,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\external\darktools\src\encoding_converter.cpp" />
+    <ClCompile Include="..\..\..\source\src\console_term.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer_factory.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packs_ini_configurator.cpp" />
     <ClCompile Include="..\..\..\source\src\ini_parser.cpp" />
+    <ClCompile Include="..\..\..\source\src\variable_processor.cpp" />
     <ClCompile Include="..\..\..\source\test\ema.packs.test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +100,7 @@
     <ClInclude Include="..\..\..\source\external\darktools\inc\guid.hpp" />
     <ClInclude Include="..\..\..\source\external\darktools\inc\singleton.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
+    <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer_factory.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packs_ini_configurator.hpp" />
