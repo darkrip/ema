@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <functional>
+#include <map>
 
 namespace ema
 {
@@ -39,7 +40,7 @@ public:
 	typedef std::shared_ptr<VariableModificatorBase> Ptr;
 	typedef const VariableModificatorBase&           Ref;
 	typedef size_t Id;
-	virtual void modify(VariableBase::Value, VariableBase::Id, const ContextBase&)=0;
+	virtual void modify(VariableBase::Value, VariableBase::Id, const ContextBase&)const=0;
 };
 
 
@@ -59,21 +60,38 @@ class ContextBase
 {
 public:
 	typedef std::shared_ptr<ContextBase> Ptr;
-	typedef std::weak_ptr<ContextBase> LPtr;
-	typedef std::function<void(void)> Getter;
+	typedef std::weak_ptr<ContextBase>   LPtr;
+	typedef std::function<String(void)>    Getter;
+	typedef VariableBase::Id             Id;
 
-	VariableBase::Value get(VariableBase::Id, const ModificatorsList& mod_list=ModificatorsList(), bool ignore_mod_for_empty=true);
+	VariableBase::Value get(Id, const ModificatorsList& mod_list=ModificatorsList(), bool ignore_mod_for_empty=true);
 	ContextBase::Ptr getParent(){ return m_parent.lock(); }
 	VariableProcessorPtr getOwner(){ return m_owner.lock(); }
-	bool isExist(VariableBase::Id)const;
+	bool isExist(Id)const;
 protected:
-	bool registerGetter(VariableBase::Id, const Getter&);
-
-
+	bool registerGetter(Id, const Getter&);
 private:
+	typedef std::map<Id, Getter> Data;
+
+	VariableBase::Value internalGet(VariableBase::Id);
 	LPtr m_parent;
 	VariableProcessorLPtr m_owner;
+	Data m_data;
 };
+
+
+template<typename Obj>
+class Context: public ContextBase
+{
+public:
+	ContextBase::Ptr create();
+	
+};
+
+
+
+
+
 
 
 class EmptyContext : public ContextBase
