@@ -99,6 +99,7 @@
     <ClInclude Include="..\..\..\source\external\darktools\inc\file_tools.hpp" />
     <ClInclude Include="..\..\..\source\external\darktools\inc\guid.hpp" />
     <ClInclude Include="..\..\..\source\external\darktools\inc\singleton.hpp" />
+    <ClInclude Include="..\..\..\source\inc\cache_controller.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer.hpp" />

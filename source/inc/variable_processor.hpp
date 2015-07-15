@@ -7,6 +7,7 @@
 #include <memory>
 #include <functional>
 #include <map>
+#include <list>
 
 namespace ema
 {
@@ -55,6 +56,12 @@ public:
 	VariableNotExistInCurrentContext(VariableBase::Id, const VariableProcessorPtr&){}
 };
 
+class VariableNotRegistred : public std::exception
+{
+public:
+	VariableNotRegistred(VariableBase::NameRef){}
+};
+
 
 class ContextBase
 {
@@ -70,6 +77,8 @@ public:
 	bool isExist(Id)const;
 protected:
 	bool registerGetter(Id, const Getter&);
+	ContextBase(VariableProcessorLPtr owner, LPtr parent);
+	virtual ~ContextBase(){}
 private:
 	typedef std::map<Id, Getter> Data;
 
@@ -80,11 +89,42 @@ private:
 };
 
 
-template<typename Obj>
 class Context: public ContextBase
 {
 public:
-	ContextBase::Ptr create();
+	friend class ContextCreator;
+
+	class Var
+	{
+	public:
+		Var(VariableBase::NameRef name, const Getter& getter):
+			m_name(name), m_getter(getter){}
+		const VariableBase::Name& getName()const{ return m_name; }
+		const Getter& getGetter()const{ return m_getter; }
+	private:
+		VariableBase::Name m_name;
+		Getter             m_getter;
+	};
+
+	class ContextCreator
+	{
+	public:
+		ContextCreator(VariableProcessorPtr owner, ContextBase::Ptr parent);
+		ContextCreator& operator << (const Var& var){ addVar(var); return *this; }
+		operator ContextBase::Ptr(){ return create(); }
+	private:
+		typedef std::list<Var> Vars;
+		void addVar(const Var& var){ m_vars.push_back(var); }
+		ContextBase::Ptr create();
+		VariableProcessorPtr m_owner;
+		ContextBase::Ptr     m_parent;
+		Vars                 m_vars;
+	};
+
+	Context(VariableProcessorLPtr owner, LPtr parent):
+		ContextBase(owner, parent){}
+	static ContextCreator create(ContextBase::Ptr baseContext);
+	static ContextCreator create(VariableProcessorPtr owner);
 	
 };
 
@@ -95,7 +135,10 @@ public:
 
 
 class EmptyContext : public ContextBase
-{};
+{
+public:
+	EmptyContext(): ContextBase(VariableProcessorPtr(), ContextBase::Ptr()){}
+};
 
 
 class VariableProcessor

@@ -45,15 +45,15 @@ void CustomPackerIniConfigurator::createPacker(size_t index)
 		m_iniParser.getString(index, L"End"),
 		m_iniParser.getStringList(index, L"IgnoreString")));
 
-	setPackIsArchiveCommand(console::ConsoleCommand(m_iniParser.getString(index, L"IsArchive")));
-	setPackListCommand(console::ConsoleCommand(m_iniParser.getString(index, L"List")));
-	setPackExtractCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Extract")));
-	setPackExtractWithPathCommand(console::ConsoleCommand(m_iniParser.getString(index, L"ExtractWithPath")));
+	setPackIsArchiveCommand(var::ConsoleCommand(m_iniParser.getString(index, L"IsArchive")));
+	setPackListCommand(var::ConsoleCommand(m_iniParser.getString(index, L"List")));
+	setPackExtractCommand(var::ConsoleCommand(m_iniParser.getString(index, L"Extract")));
+	setPackExtractWithPathCommand(var::ConsoleCommand(m_iniParser.getString(index, L"ExtractWithPath")));
 
-	setPackTestCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Test")));
-	setPackDeleteCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Delete")));
-	setPackAddCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Add")));
-	setPackMoveCommand(console::ConsoleCommand(m_iniParser.getString(index, L"Move")));
+	setPackTestCommand(var::ConsoleCommand(m_iniParser.getString(index, L"Test")));
+	setPackDeleteCommand(var::ConsoleCommand(m_iniParser.getString(index, L"Delete")));
+	setPackAddCommand(var::ConsoleCommand(m_iniParser.getString(index, L"Add")));
+	setPackMoveCommand(var::ConsoleCommand(m_iniParser.getString(index, L"Move")));
 
 	setPackInputString(m_iniParser.getString(index, L"InputString"));
 

@@ -1,6 +1,7 @@
 #include "variable_processor.hpp"
 
 #include <boost/assert.hpp>
+#include <boost/foreach.hpp>
 
 
 using namespace ema;
@@ -52,4 +53,34 @@ VariableBase::Value ContextBase::internalGet(ContextBase::Id id)
 {
 	BOOST_ASSERT(isExist(id));
 	return m_data[id]();
+}
+
+
+
+
+Context::ContextCreator Context::create(ContextBase::Ptr baseContext)
+{
+	BOOST_ASSERT(!!baseContext);
+	return ContextCreator(baseContext->getOwner(), baseContext);
+}
+
+Context::ContextCreator Context::create(VariableProcessorPtr owner)
+{
+	BOOST_ASSERT(!!owner);
+	return ContextCreator(owner, ContextBase::Ptr());
+}
+
+ContextBase::Ptr Context::ContextCreator::create()
+{
+	std::shared_ptr<Context> context(new Context(m_owner, m_parent));
+
+	BOOST_FOREACH( const Var& var, m_vars )
+	{
+		VariableBase::Id id = m_owner->findVar(var.getName());
+		if(id == VariableProcessor::wrongIndex)
+			throw VariableNotRegistred(var.getName());
+		context->registerGetter(id, var.getGetter());
+	}
+
+	return context;
 }

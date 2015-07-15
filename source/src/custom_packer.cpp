@@ -57,10 +57,10 @@ BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"P", boost::bind(&PackF
 /*
 
 	; %%R - Current archive folder.
-		; %%L - Filelist name. Filelist is the file containing names of files
-		; %%l - Filelist with short file names.
-		; %%F - Names of one or more files to be processed. If all names
-		; %%f - The name of a single file to process. The archiver will be
+	; %%L - Filelist name. Filelist is the file containing names of files
+	; %%l - Filelist with short file names.
+	; %%F - Names of one or more files to be processed. If all names
+	; %%f - The name of a single file to process. The archiver will be
 */
 }
 
@@ -78,8 +78,12 @@ bool CustomPacker::isCorrectFile(const FileName& fileName, PackDataStream& strea
 	if(!m_ids.isCorrect(stream))
 		return false;
 
-	var::CommandContext context(fileName);
-	if(runCommand(ciIsArchive, context)!=0)
+	var::ContextBase::Ptr context = var::Context::create(getContext()) 
+		<< var::Context::Var(L"A", [fileName]()->String{ return fileName; } )
+		<< var::Context::Var(L"a", boost::bind(&hd::tools::shortPathCreator, fileName))
+		<< var::Context::Var(L"W", boost::bind(&CacheController::getCacheFolder, m_cacheController.createSub()));
+
+	if(runCommand(ciIsArchive, *context)!=0)
 		return false;
 
 	return true;
@@ -91,6 +95,7 @@ int CustomPacker::runCommand(CommandsId commandId, var::ContextBase& context, co
 {
 	int result = 0;
 	String str_command = m_commands[commandId].str(context);
-	result = m_console.execute(str_command, m_commands[commandId].work_dir(), handler);
+	String str_work_dir =m_commands[commandId].work_dir();
+	result = m_console.execute(str_command, str_work_dir, handler);
 	return result;
 }

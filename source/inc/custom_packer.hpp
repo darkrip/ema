@@ -9,6 +9,7 @@
 #include "console_term.hpp"
 #include "packer_id_list.hpp"
 #include "variable_processor.hpp"
+#include "cache_controller.hpp"
 
 #include "defs.hpp"
 
@@ -41,6 +42,7 @@ private:
 
 	void initVariables();
 	int runCommand(CommandsId, var::ContextBase&, console::ConsoleCommandHandler& handler=console::EmptyHandler());
+	var::ContextBase::Ptr& getContext(){ return m_context; }
 
 	String		  m_name;
 	String		  m_description;
@@ -63,7 +65,9 @@ private:
 	console::ListCommandHandler m_listCommandHandler;
 	String m_inputString;
 
-	console::ConsoleTerm m_console;
+	console::ConsoleTerm  m_console;
+	var::ContextBase::Ptr m_context;
+	CacheController       m_cacheController;
 };
 
 
