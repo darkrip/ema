@@ -1,6 +1,9 @@
 #ifndef __LIST_COMMAND_HANDLER_HPP__
 #define __LIST_COMMAND_HANDLER_HPP__
 
+
+#include "console_term.hpp"
+
 #include "defs.hpp"
 
 
@@ -10,12 +13,14 @@ namespace console
 {
 
 
-class ListCommandHandler
+class ListCommandHandler : public ConsoleCommandLinesHandler
 {
 public:
 	ListCommandHandler();
 	ListCommandHandler(StringListRef format, StringRef start, StringRef end, StringListRef ignoreStrings);
-
+protected:
+	virtual String readLine();
+	virtual void writeLine(StringRef);
 };
 
 
