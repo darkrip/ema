@@ -2,6 +2,9 @@
 #define __PACK_FILE_HPP__
 
 
+#include "shared_data.hpp"
+
+
 namespace ema
 {
 namespace pack
@@ -10,10 +13,10 @@ namespace pack
 class PackerBase;
 
 
-class PackFile
+class PackFile : public SharedDataStorage
 {
 public:
-	typedef std::shared_ptr<PackFile> Ref;
+	typedef std::shared_ptr<PackFile> Ptr;
 	FileName getPackName()const;
 	FileName getPackFullPatch()const;
 	FileName getTmpFolder()const;

@@ -42,7 +42,7 @@ bool test(const std::wstring& locale, const std::wstring& command, const std::ws
 		ema::console::ConsoleTerm console;
 		console.init(locale, false, 10000);
 		TestConsoleCommandHandler handler;
-		result = console.execute(command, handler);
+		result = console.execute(command, L"",handler);
 		output_result = handler.getResult();
 	}
 	catch (std::exception&)
