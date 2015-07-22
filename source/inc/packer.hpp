@@ -20,7 +20,7 @@ class PackerBase
 public:
 	typedef std::shared_ptr<PackerBase> Ptr;
 	virtual bool isCorrectFile(const FileName&, PackDataStream&) = 0;
-	virtual PackFile::Ref open(const FileName&, PackDataStream&) = 0;
+	virtual PackFile::Ptr open(const FileName&, PackDataStream&) = 0;
 	virtual void Upgrade(FileCache& file, FileCache::LoadStatus newRequestedStatus, bool readOnly = true) = 0;
 };
 

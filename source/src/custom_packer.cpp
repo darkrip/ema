@@ -28,10 +28,13 @@ void CustomPacker::init()
 
 	BOOST_FOREACH( var::ConsoleCommand& cc, m_commands )
 		cc.init(m_variableProcessor);
-
 }
 
-
+PackFile::Ptr CustomPacker::open(const FileName& name, PackDataStream&)
+{
+	PackFile::Ptr pack_file(
+		new PackFile(name, this));
+}
 
 void CustomPacker::initVariables()
 {

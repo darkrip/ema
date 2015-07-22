@@ -30,7 +30,7 @@ public:
 	typedef std::shared_ptr<CustomPacker> Ptr;
 	
 	bool isCorrectFile(const FileName&, PackDataStream&);
-	PackFile::Ref open(const FileName&, PackDataStream&);
+	PackFile::Ptr open(const FileName&, PackDataStream&);
 	void Upgrade(FileCache& file, FileCache::LoadStatus newRequestedStatus, bool readOnly = true);
 
 protected:

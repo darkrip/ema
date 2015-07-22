@@ -13,9 +13,9 @@ typedef String			    FileName;
 typedef const FileName&	    FileNameRef;
 typedef std::vector<String> StringList;
 typedef const StringList&   StringListRef;
-typedef std::wiostream      PackDataStream;
-typedef std::wostream       PackDataReadStream;
-typedef std::wistream       PackDataWriteStream;
+typedef std::iostream      PackDataStream;
+typedef std::ostream       PackDataReadStream;
+typedef std::istream       PackDataWriteStream;
 
 }
 
