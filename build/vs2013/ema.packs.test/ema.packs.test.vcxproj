@@ -90,15 +90,20 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\external\darktools\src\encoding_converter.cpp" />
     <ClCompile Include="..\..\..\source\src\console_command.cpp" />
     <ClCompile Include="..\..\..\source\src\console_term.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer_factory.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packs_ini_configurator.cpp" />
     <ClCompile Include="..\..\..\source\src\ini_parser.cpp" />
+    <ClCompile Include="..\..\..\source\src\packer.cpp" />
+    <ClCompile Include="..\..\..\source\src\pack_file.cpp" />
+    <ClCompile Include="..\..\..\source\src\variable_processor.cpp" />
     <ClCompile Include="..\..\..\source\test\ema.packs.test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\source\external\darktools\inc\file_tools.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer.hpp" />

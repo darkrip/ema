@@ -22,8 +22,9 @@ CustomPacker::CustomPacker(StringRef packerName) : m_variableProcessor(new var::
 
 
 
-void CustomPacker::init()
+void CustomPacker::init(const LPtr& self)
 {
+	PackerBase::init(self);
 	initVariables();//Variable processor must be inited before commands
 
 	BOOST_FOREACH( var::ConsoleCommand& cc, m_commands )
@@ -33,7 +34,8 @@ void CustomPacker::init()
 PackFile::Ptr CustomPacker::open(const FileName& name, PackDataStream&)
 {
 	PackFile::Ptr pack_file(
-		new PackFile(name, this));
+		new PackFile(name, getSelf().lock(), m_cacheController.createSub()));
+	return pack_file;
 }
 
 void CustomPacker::initVariables()

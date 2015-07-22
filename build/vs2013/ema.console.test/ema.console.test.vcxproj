@@ -62,6 +62,7 @@
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)" mkdir "$(SolutionDir)..\..\output\tests\$(ProjectName)"
 if exist "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" robocopy "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.*
+robocopy "$(SolutionDir)..\..\source\test\ema.tools.filetype\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.exe
 IF %ERRORLEVEL% GEQ 8 exit 1
 exit 0</Command>
       <Message>Create test folder</Message>
@@ -83,6 +84,7 @@ exit 0</Command>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)" mkdir "$(SolutionDir)..\..\output\tests\$(ProjectName)"
 if exist "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" robocopy "$(SolutionDir)..\..\source\test\$(ProjectName)\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.*
+robocopy "$(SolutionDir)..\..\source\test\ema.tools.filetype\test.data" "$(SolutionDir)..\..\output\tests\$(ProjectName)" *.exe
 IF %ERRORLEVEL% GEQ 8 exit 1
 exit 0</Command>
       <Message>Create test folder</Message>

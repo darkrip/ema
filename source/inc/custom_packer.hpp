@@ -33,9 +33,12 @@ public:
 	PackFile::Ptr open(const FileName&, PackDataStream&);
 	void Upgrade(FileCache& file, FileCache::LoadStatus newRequestedStatus, bool readOnly = true);
 
+	const ExtensionList& getExtensions()const{ return m_extensionList; }
+
+
 protected:
 	CustomPacker(StringRef packerName);
-	void init();
+	void init(const LPtr& self);
 private:
 	friend class CustomPackerFactoryBase;
 	enum CommandsId{ ciEmpty=0, ciIsArchive, ciList, ciExtract, ciExtractWithoutPath, ciTest, ciDelete, ciAdd, ciMove, ciLastCommand };

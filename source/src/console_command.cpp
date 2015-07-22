@@ -2,7 +2,7 @@
 
 
 using namespace ema;
-using namespace console;
+using namespace var;
 
 
 

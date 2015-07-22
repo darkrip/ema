@@ -49,6 +49,7 @@ public:
 	public:
 		typedef std::shared_ptr<AsyncHandler> Ptr;
 		AsyncHandler(){}
+		~AsyncHandler(){ join(); }
 		void join(){ m_threadGroup.join_all(); }
 		void checkExeption(){
 			if (m_writeTask->getResult())
@@ -236,6 +237,8 @@ ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, StringRef wor
 
 	if (!CreateProcessW(NULL, p_command, NULL, NULL, TRUE, 0/*CREATE_NEW_PROCESS_GROUP*/, NULL, work_dir.c_str(), &si, &pi))
 	{
+		inputReadPipe.close();
+		outputWritePipe.close();
 		throw RunCommandExpection();
 	}
 
@@ -248,6 +251,8 @@ ConsoleTerm::CommandResult ConsoleTerm::execute(StringRef command, StringRef wor
 	{
 		//TODO: Kill process and all childs
 		TerminateProcess(command_process.impl(), -1);
+		inputReadPipe.close();
+		outputWritePipe.close();
 		throw RunCommandExpection();
 	}
 

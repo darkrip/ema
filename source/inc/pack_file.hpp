@@ -4,6 +4,7 @@
 
 #include "shared_data.hpp"
 #include "cache_controller.hpp"
+#include "file_cache.hpp"
 #include "defs.hpp"
 
 namespace ema
@@ -26,7 +27,7 @@ public:
 	FileName getPackFullPatch()const;
 	FileName getTmpFolder()const;
 	FileName getPassword()const;
-	FileCache::Ptr getRoot();
+	FileCache::Ptr getRoot(){ return m_root; }
 	PackerBasePtr getPacker();
 private:
 	FileCache::Ptr       m_root;
@@ -34,15 +35,6 @@ private:
 	PackerBasePtr        m_packer;
 	CacheController::Ptr m_cacheConstoller;
 };
-
-PackFile::PackFile(FileNameRef fullFileName, PackerBasePtr packer, const CacheController::Ptr& cache_controller):
-	m_fullName(fullFileName),
-	m_packer(packer),
-	m_cacheConstoller(cache_controller)
-{
-	
-}
-
 
 
 }//pack

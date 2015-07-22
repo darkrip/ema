@@ -26,10 +26,9 @@ void CustomPackerFactoryBase::registration()
 		return;
 	}
 
-	m_packer->init();
-
 	ema::pack::PackerBase::Ptr ptr = m_packer;
+	m_packer->init(ptr);
+	PackerManager::ExtensionList extensions(m_packer->getExtensions().begin(), m_packer->getExtensions().end());
 	m_packer.reset();
-	PackerManager::getInstance().registerPacker(ptr);
-
+	PackerManager::getInstance().registerPacker(ptr, extensions);
 }

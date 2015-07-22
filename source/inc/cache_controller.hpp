@@ -20,7 +20,7 @@ public:
 	typedef std::shared_ptr<CacheController> Ptr;
 
 	String getCacheFolder(){ return L""; }
-	CacheController createSub(){ return CacheController(); }
+	Ptr createSub(){ return Ptr(new CacheController()); }
 };
 
 

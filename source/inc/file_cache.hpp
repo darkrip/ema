@@ -13,7 +13,9 @@ namespace pack
 {
 
 class PackFile;
-typedef std::shared_ptr<PackFile>  PackRef;
+class FileCache;
+
+typedef std::shared_ptr<PackFile>  PackFilePtr;
 typedef std::shared_ptr<FileCache> FileCachePtr;
 typedef std::vector<FileCachePtr>  FileCacheChilds;
 
@@ -22,7 +24,10 @@ typedef std::vector<FileCachePtr>  FileCacheChilds;
 
 struct FileCacheData
 {
-	PackRef  	                m_pack;
+	FileCacheData(const FileCacheData& ref) :
+		m_pack(ref.m_pack), m_parent(ref.m_parent), m_name(ref.m_name), m_isFolder(ref.m_isFolder), m_childs(ref.m_childs){}
+
+	PackFilePtr	                m_pack;
 	FileCachePtr				m_parent;
 	FileName 		            m_name;
 	bool	 	                m_isFolder;
@@ -48,8 +53,8 @@ public:
 
 	FileCache(const FileCacheData& data, LoadStatus status): FileCacheData(data), m_status(status){}
 
-	FileName getName()const{ ckeckLevel(SratusLoadName); return m_name; }
-	bool     isFolder()const;
+	FileName getName(){ ckeckLevel(SratusLoadName); return m_name; }
+	bool     isFolder(){ ckeckLevel(SratusLoadName); return m_isFolder; }
 
 	attr::FileAttr& getAttr();
 	FileName getExtractedName();
