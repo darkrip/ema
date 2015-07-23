@@ -10,3 +10,16 @@ m_packer(packer),
 m_cacheConstoller(cache_controller)
 {
 }
+
+void ema::pack::PackFile::init(LPtr ptr)
+{
+	m_self = ptr;
+	FileCacheData fileData={
+		getSelf(),
+		FileCachePtr(),
+		L"\\",
+		true,
+		FileCacheChilds()
+	};
+	m_root.reset(new FileCache(fileData, FileCache::SratusLoadName));
+}

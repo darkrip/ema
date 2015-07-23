@@ -31,4 +31,5 @@ int main(int argc, char** argv)
 	ema::pack::PackerBase::Ptr packer = ema::pack::PackerManager::getInstance().findPacker(fileName, file);
 	ema::pack::PackFile::Ptr pack_file = packer->open(fileName, file);
 	ema::pack::FileCache::Ptr root_folder = pack_file->getRoot();
+	print_file(root_folder);
 }

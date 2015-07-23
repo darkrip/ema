@@ -27,7 +27,7 @@ public:
 
 	virtual bool isCorrectFile(const FileName&, PackDataStream&) = 0;
 	virtual PackFile::Ptr open(const FileName&, PackDataStream&) = 0;
-	virtual void Upgrade(FileCache& file, FileCache::LoadStatus newRequestedStatus, bool readOnly = true) = 0;
+	virtual FileCache::LoadStatus Upgrade(FileCache& file, FileCache::LoadStatus newRequestedStatus, bool readOnly = true) = 0;
 private:
 	LPtr m_self;
 };

@@ -20,8 +20,13 @@ class PackFile : public SharedDataStorage
 {
 public:
 	typedef std::shared_ptr<PackFile> Ptr;
+	typedef std::weak_ptr<PackFile>   LPtr;
 
 	PackFile(FileNameRef fullFileName, PackerBasePtr packer, const CacheController::Ptr& cache_controller);
+
+	void init(LPtr ptr);
+	LPtr getSelf(){ return m_self; }
+
 
 	FileName getPackName()const;
 	FileName getPackFullPatch()const;
@@ -34,6 +39,7 @@ private:
 	FileName             m_fullName;
 	PackerBasePtr        m_packer;
 	CacheController::Ptr m_cacheConstoller;
+	LPtr                 m_self;
 };
 
 

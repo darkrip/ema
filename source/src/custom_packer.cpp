@@ -35,6 +35,7 @@ PackFile::Ptr CustomPacker::open(const FileName& name, PackDataStream&)
 {
 	PackFile::Ptr pack_file(
 		new PackFile(name, getSelf().lock(), m_cacheController.createSub()));
+	pack_file->init(pack_file);
 	return pack_file;
 }
 

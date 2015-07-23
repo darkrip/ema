@@ -6,6 +6,7 @@
 #include "defs.hpp"
 #include <vector>
 #include <memory>
+#include <exception>
 
 namespace ema
 {
@@ -34,6 +35,11 @@ struct FileCacheData
 	FileCacheChilds  		    m_childs;
 };
 
+
+class FileCacheUpgradeExeption : public std::exception
+{
+
+};
 
 
 class FileCache : private  FileCacheData
@@ -73,8 +79,11 @@ public:
 
 
 protected:
-	void innerUpgrade(LoadStatus);
-	void ckeckLevel(LoadStatus);
+	void innerUpgrade(LoadStatus status);
+
+
+	void ckeckLevel(LoadStatus status);
+	
 	bool isDirty()const;
 	void setDirty();
 	void clearDirty();

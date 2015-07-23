@@ -83,7 +83,10 @@
     <ClCompile Include="..\..\..\source\src\custom_packer.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer_factory.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packs_ini_configurator.cpp" />
+    <ClCompile Include="..\..\..\source\src\file_cache.cpp" />
     <ClCompile Include="..\..\..\source\src\ini_parser.cpp" />
+    <ClCompile Include="..\..\..\source\src\packer.cpp" />
+    <ClCompile Include="..\..\..\source\src\pack_file.cpp" />
     <ClCompile Include="..\..\..\source\src\variable_processor.cpp" />
     <ClCompile Include="..\..\..\source\test\ema.packs.test\main.cpp" />
   </ItemGroup>
