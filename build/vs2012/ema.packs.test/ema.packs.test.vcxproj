@@ -118,6 +118,7 @@
     <ClInclude Include="..\..\..\source\inc\pack_file.hpp" />
     <ClInclude Include="..\..\..\source\inc\regstorage.hpp" />
     <ClInclude Include="..\..\..\source\inc\shared_data.hpp" />
+    <ClInclude Include="..\..\..\source\inc\status_chain.hpp" />
     <ClInclude Include="..\..\..\source\inc\variable_processor.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

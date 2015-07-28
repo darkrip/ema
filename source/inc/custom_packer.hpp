@@ -31,7 +31,7 @@ public:
 	
 	bool isCorrectFile(const FileName&, PackDataStream&);
 	PackFile::Ptr open(const FileName&, PackDataStream&);
-	FileCache::LoadStatus Upgrade(FileCacheData& file, FileCache::LoadStatus newRequestedStatus, bool readOnly = true);
+	FileCache::LoadStatus Upgrade(FileCache& file, FileCacheData& fileData, FileCache::LoadStatus newRequestedStatus, bool readOnly = true);
 
 	const ExtensionList& getExtensions()const{ return m_extensionList; }
 

@@ -133,5 +133,8 @@
     <ClInclude Include="..\..\..\source\inc\shared_data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\source\inc\status_chain.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

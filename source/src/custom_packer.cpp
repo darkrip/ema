@@ -29,6 +29,14 @@ void CustomPacker::init(const LPtr& self)
 
 	BOOST_FOREACH( var::ConsoleCommand& cc, m_commands )
 		cc.init(m_variableProcessor);
+
+	m_statusChain.init(
+		StatusChain::Creator() 
+		<< StatusChain::Item(FileCache::LoadStatus::SratusLoadName,     &loadFileName,   &unloadFileName)
+		<< StatusChain::Item(FileCache::LoadStatus::StatusLoadAttrOnly, &loadFileAttr,   &unloadFileAttr)
+		<< StatusChain::Item(FileCache::LoadStatus::StatusLoadStream,   &loadFileStream, &unloadFileStream)
+		<< StatusChain::Item(FileCache::LoadStatus::StatusLoadInFile,   &loadFileToTmp,  &unloadFileFromTmp)
+		);
 }
 
 PackFile::Ptr CustomPacker::open(const FileName& name, PackDataStream&)
@@ -95,8 +103,6 @@ bool CustomPacker::isCorrectFile(const FileName& fileName, PackDataStream& strea
 	return true;
 }
 
-
-
 int CustomPacker::runCommand(CommandsId commandId, var::ContextBase& context, console::ConsoleCommandHandler& handler)
 {
 	int result = 0;
@@ -104,4 +110,11 @@ int CustomPacker::runCommand(CommandsId commandId, var::ContextBase& context, co
 	String str_work_dir =m_commands[commandId].work_dir();
 	result = m_console.execute(str_command, str_work_dir, handler);
 	return result;
+}
+
+FileCache::LoadStatus ema::pack::CustomPacker::Upgrade(FileCache& file, FileCacheData& fileData, FileCache::LoadStatus newRequestedStatus, bool readOnly /*= true*/)
+{
+	FileCache::LoadStatus oldStatus = file.getStatus();
+	FileCache::LoadStatus realStatus = m_statusChain.run(newRequestedStatus, oldStatus, file, fileData, readOnly);
+	return realStatus;
 }
