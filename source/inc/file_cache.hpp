@@ -77,6 +77,7 @@ public:
 	Childs& getChilds();
 	Ptr getParent();
 
+	LoadStatus getStatus()const;
 
 protected:
 	void innerUpgrade(LoadStatus status);

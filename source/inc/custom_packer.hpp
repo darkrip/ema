@@ -10,6 +10,7 @@
 #include "packer_id_list.hpp"
 #include "variable_processor.hpp"
 #include "cache_controller.hpp"
+#include "status_chain.hpp"
 
 #include "defs.hpp"
 
@@ -21,6 +22,8 @@ namespace ema
 {
 namespace pack
 {
+
+typedef StatusChain < FileCache::LoadStatus, FileCache::LoadStatus(FileCache&, FileCacheData&, bool)> PackerStatusChain;
 
 
 class CustomPacker : public PackerBase
@@ -47,6 +50,18 @@ private:
 	int runCommand(CommandsId, var::ContextBase&, console::ConsoleCommandHandler& handler=console::EmptyHandler());
 	var::ContextBase::Ptr& getContext(){ return m_context; }
 
+	FileCache::LoadStatus loadFileName(FileCache& file, FileCacheData& fileData, bool readOnly);
+	FileCache::LoadStatus unloadFileName(FileCache& file, FileCacheData& fileData, bool readOnly);
+
+	FileCache::LoadStatus loadFileAttr(FileCache& file, FileCacheData& fileData, bool readOnly);
+	FileCache::LoadStatus unloadFileAttr(FileCache& file, FileCacheData& fileData, bool readOnly);
+
+	FileCache::LoadStatus loadFileStream(FileCache& file, FileCacheData& fileData, bool readOnly);
+	FileCache::LoadStatus unloadFileStream(FileCache& file, FileCacheData& fileData, bool readOnly);
+
+	FileCache::LoadStatus loadFileToTmp(FileCache& file, FileCacheData& fileData, bool readOnly);
+	FileCache::LoadStatus unloadFileFromTmp(FileCache& file, FileCacheData& fileData, bool readOnly);
+
 	String		  m_name;
 	String		  m_description;
 	ExtensionList m_extensionList;
@@ -71,6 +86,7 @@ private:
 	console::ConsoleTerm  m_console;
 	var::ContextBase::Ptr m_context;
 	CacheController       m_cacheController;
+	PackerStatusChain     m_statusChain;
 };
 
 

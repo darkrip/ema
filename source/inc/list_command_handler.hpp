@@ -16,7 +16,7 @@ namespace console
 class ListCommandHandler : public ConsoleCommandLinesHandler
 {
 public:
-	ListCommandHandler()0
+	ListCommandHandler();
 	ListCommandHandler(StringListRef format, StringRef start, StringRef end, StringListRef ignoreStrings);
 protected:
 	virtual String readLine();

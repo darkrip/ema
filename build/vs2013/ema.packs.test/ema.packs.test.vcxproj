@@ -104,6 +104,7 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\external\darktools\inc\file_tools.hpp" />
+    <ClInclude Include="..\..\..\source\inc\cache_controller.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_command.hpp" />
     <ClInclude Include="..\..\..\source\inc\console_term.hpp" />
     <ClInclude Include="..\..\..\source\inc\custom_packer.hpp" />
@@ -118,6 +119,8 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
     <ClInclude Include="..\..\..\source\inc\packer_id_list.hpp" />
     <ClInclude Include="..\..\..\source\inc\pack_file.hpp" />
     <ClInclude Include="..\..\..\source\inc\regstorage.hpp" />
+    <ClInclude Include="..\..\..\source\inc\shared_data.hpp" />
+    <ClInclude Include="..\..\..\source\inc\status_chain.hpp" />
     <ClInclude Include="..\..\..\source\inc\variable_processor.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

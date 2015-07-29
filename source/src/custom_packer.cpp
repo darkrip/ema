@@ -31,11 +31,11 @@ void CustomPacker::init(const LPtr& self)
 		cc.init(m_variableProcessor);
 
 	m_statusChain.init(
-		StatusChain::Creator() 
-		<< StatusChain::Item(FileCache::LoadStatus::SratusLoadName,     &loadFileName,   &unloadFileName)
-		<< StatusChain::Item(FileCache::LoadStatus::StatusLoadAttrOnly, &loadFileAttr,   &unloadFileAttr)
-		<< StatusChain::Item(FileCache::LoadStatus::StatusLoadStream,   &loadFileStream, &unloadFileStream)
-		<< StatusChain::Item(FileCache::LoadStatus::StatusLoadInFile,   &loadFileToTmp,  &unloadFileFromTmp)
+		PackerStatusChain::Creator() 
+		<< PackerStatusChain::Item(FileCache::LoadStatus::SratusLoadName, &CustomPacker::loadFileName, &CustomPacker::unloadFileName)
+		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadAttrOnly, &CustomPacker::loadFileAttr, &CustomPacker::unloadFileAttr)
+		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadStream, &CustomPacker::loadFileStream, &CustomPacker::unloadFileStream)
+		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadInFile, &CustomPacker::loadFileToTmp, &CustomPacker::unloadFileFromTmp)
 		);
 }
 
@@ -92,11 +92,11 @@ bool CustomPacker::isCorrectFile(const FileName& fileName, PackDataStream& strea
 	if(!m_ids.isCorrect(stream))
 		return false;
 
-	var::ContextBase::Ptr context = var::Context::create(getContext()) 
+	var::ContextBase::Ptr context;/* = var::Context::create(getContext())
 		<< var::Context::Var(L"A", [fileName]()->String{ return fileName; } )
 		<< var::Context::Var(L"a", boost::bind(&hd::tools::shortPathCreator, fileName))
 		<< var::Context::Var(L"W", boost::bind(&CacheController::getCacheFolder, m_cacheController.createSub()));
-
+	*/
 	if(runCommand(ciIsArchive, *context)!=0)
 		return false;
 
