@@ -32,10 +32,10 @@ void CustomPacker::init(const LPtr& self)
 
 	m_statusChain.init(
 		PackerStatusChain::Creator() 
-		<< PackerStatusChain::Item(FileCache::LoadStatus::SratusLoadName, &CustomPacker::loadFileName, &CustomPacker::unloadFileName)
-		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadAttrOnly, &CustomPacker::loadFileAttr, &CustomPacker::unloadFileAttr)
-		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadStream, &CustomPacker::loadFileStream, &CustomPacker::unloadFileStream)
-		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadInFile, &CustomPacker::loadFileToTmp, &CustomPacker::unloadFileFromTmp)
+		<< PackerStatusChain::Item(FileCache::LoadStatus::SratusLoadName,     boost::bind(&CustomPacker::loadFileName,   this, _1, _2, _3), boost::bind(&CustomPacker::unloadFileName, this,    _1, _2, _3))
+		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadAttrOnly, boost::bind(&CustomPacker::loadFileAttr,   this, _1, _2, _3), boost::bind(&CustomPacker::unloadFileAttr, this,    _1, _2, _3))
+		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadStream,   boost::bind(&CustomPacker::loadFileStream, this, _1, _2, _3), boost::bind(&CustomPacker::unloadFileStream, this,  _1, _2, _3))
+		<< PackerStatusChain::Item(FileCache::LoadStatus::StatusLoadInFile,   boost::bind(&CustomPacker::loadFileToTmp,  this, _1, _2, _3), boost::bind(&CustomPacker::unloadFileFromTmp, this, _1, _2, _3))
 		);
 }
 
@@ -79,6 +79,53 @@ BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"P", boost::bind(&PackF
 }
 
 
+FileCache::LoadStatus CustomPacker::loadFileName(FileCache& file, FileCacheData& fileData, bool readOnly)
+{
+	return FileCache::StatusLoadEmpty;
+		/*		,
+		SratusLoadName, 	// Only Name and IsFolder
+		StatusLoadAttrOnly, // And attr's
+		StatusLoadStream,   // And read/write stream, childs list avalible
+		StatusLoadInFile,   // Unpacked file exist in temporary folder*/
+}
+
+FileCache::LoadStatus CustomPacker::unloadFileName(FileCache& file, FileCacheData& fileData, bool readOnly)
+{
+	return FileCache::StatusLoadEmpty;
+}
+
+FileCache::LoadStatus CustomPacker::loadFileAttr(FileCache& file, FileCacheData& fileData, bool readOnly)
+{
+	return FileCache::StatusLoadEmpty;
+}
+
+FileCache::LoadStatus CustomPacker::unloadFileAttr(FileCache& file, FileCacheData& fileData, bool readOnly)
+{
+	return FileCache::StatusLoadEmpty;
+}
+
+FileCache::LoadStatus CustomPacker::loadFileStream(FileCache& file, FileCacheData& fileData, bool readOnly)
+{
+	return FileCache::StatusLoadEmpty;
+}
+
+FileCache::LoadStatus CustomPacker::unloadFileStream(FileCache& file, FileCacheData& fileData, bool readOnly)
+{
+	return FileCache::StatusLoadEmpty;
+}
+
+FileCache::LoadStatus CustomPacker::loadFileToTmp(FileCache& file, FileCacheData& fileData, bool readOnly)
+{
+	return FileCache::StatusLoadEmpty;
+}
+
+FileCache::LoadStatus CustomPacker::unloadFileFromTmp(FileCache& file, FileCacheData& fileData, bool readOnly)
+{
+	return FileCache::StatusLoadEmpty;
+}
+
+
+
 
 bool CustomPacker::isCorrectFile(const FileName& fileName, PackDataStream& stream)
 {
@@ -92,11 +139,11 @@ bool CustomPacker::isCorrectFile(const FileName& fileName, PackDataStream& strea
 	if(!m_ids.isCorrect(stream))
 		return false;
 
-	var::ContextBase::Ptr context;/* = var::Context::create(getContext())
+	var::ContextBase::Ptr context = var::Context::create(getContext())
 		<< var::Context::Var(L"A", [fileName]()->String{ return fileName; } )
 		<< var::Context::Var(L"a", boost::bind(&hd::tools::shortPathCreator, fileName))
 		<< var::Context::Var(L"W", boost::bind(&CacheController::getCacheFolder, m_cacheController.createSub()));
-	*/
+	
 	if(runCommand(ciIsArchive, *context)!=0)
 		return false;
 

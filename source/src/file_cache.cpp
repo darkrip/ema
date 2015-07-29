@@ -10,7 +10,7 @@ using namespace pack;
 
 void ema::pack::FileCache::innerUpgrade(LoadStatus status)
 {
-	m_status = m_pack->getPacker()->Upgrade(*this, status);
+	m_status = m_pack->getPacker()->Upgrade(*this, *this, status);
 }
 
 void ema::pack::FileCache::ckeckLevel(LoadStatus status)

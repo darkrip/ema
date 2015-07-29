@@ -9,8 +9,6 @@
 #include <boost/fusion/include/make_vector.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/mpl/insert_range.hpp>
-#include <boost/mpl/begin_end.hpp>
 
 namespace ema
 {
@@ -24,18 +22,8 @@ class StatusChain
 public:
 	typedef std::function<FunctorSpec> Functor;
 
-	BOOST_MPL_ASSERT((equal<result, pointers>));
-
 	typedef typename boost::function_types::parameter_types< FunctorSpec > ParamMplListWithRef;
-
-	typedef boost::mpl::insert_range<
-		boost::mpl::vector<>
-		, boost::mpl::end< boost::mpl::vector<> >::type
-		, ParamMplListWithRef
-	>::type ParamMplVectorWithRef;
-
-
-	typedef boost::mpl::transform< ParamMplVectorWithRef, boost::remove_reference<_1> >::type ParamMplList;
+	typedef typename boost::mpl::transform< ParamMplListWithRef, boost::remove_reference<boost::mpl::_1> >::type ParamMplList;
 
 	template< typename ...Args >
 	StatusType run(StatusType newStatus, StatusType oldStatus, Args& ... args)
@@ -83,11 +71,9 @@ public:
 	}
 
 
-//	StatusChain::Creator()
-//<< StatusChain::Item(FileCache::LoadStatus::SratusLoadName, &loadFileName, &unloadFileName)
-
 	struct Item
 	{
+		Item() : m_status(StatusType()){}
 		Item(StatusType status, const Functor& upgradeFunctor, const Functor& downgradeFunctor) :
 			m_status(status), m_upgradeFunctor(upgradeFunctor), m_downgradeFunctor(downgradeFunctor){}
 

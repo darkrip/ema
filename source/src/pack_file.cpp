@@ -14,12 +14,12 @@ m_cacheConstoller(cache_controller)
 void ema::pack::PackFile::init(LPtr ptr)
 {
 	m_self = ptr;
-	FileCacheData fileData={
-		getSelf(),
+	FileCacheData fileData(
+		getSelf().lock(),
 		FileCachePtr(),
 		L"\\",
 		true,
-		FileCacheChilds()
-	};
+		FileCacheChilds());
+
 	m_root.reset(new FileCache(fileData, FileCache::SratusLoadName));
 }

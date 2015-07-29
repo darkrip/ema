@@ -91,11 +91,13 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\external\darktools\src\encoding_converter.cpp" />
+    <ClCompile Include="..\..\..\source\external\darktools\src\file_tools.cpp" />
     <ClCompile Include="..\..\..\source\src\console_command.cpp" />
     <ClCompile Include="..\..\..\source\src\console_term.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packer_factory.cpp" />
     <ClCompile Include="..\..\..\source\src\custom_packs_ini_configurator.cpp" />
+    <ClCompile Include="..\..\..\source\src\file_cache.cpp" />
     <ClCompile Include="..\..\..\source\src\ini_parser.cpp" />
     <ClCompile Include="..\..\..\source\src\packer.cpp" />
     <ClCompile Include="..\..\..\source\src\pack_file.cpp" />
@@ -122,6 +124,9 @@ if not exist "$(SolutionDir)..\..\output\tests\$(ProjectName)\test.pack.ini" cop
     <ClInclude Include="..\..\..\source\inc\shared_data.hpp" />
     <ClInclude Include="..\..\..\source\inc\status_chain.hpp" />
     <ClInclude Include="..\..\..\source\inc\variable_processor.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

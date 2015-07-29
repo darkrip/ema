@@ -170,6 +170,12 @@ bool IniParser::isKeyExist(SectionIndex index, KeyNameRef key_name)
 	return m_sections.get<0>()[index].m_keys.get<1>().find(key_name) != m_sections.get<0>()[index].m_keys.get<1>().end();
 }
 
+IniParser::SectionName IniParser::getSectionName(SectionIndex index)const
+{
+	if (index == wrongIndex || index >= sectionCount())
+		return SectionName();
+	return m_sections.get<0>()[index].m_name;
+}
 
 std::wstring IniParser::getString(SectionIndex index, KeyNameRef name, const std::wstring &defValue)
 {

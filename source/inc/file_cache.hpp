@@ -28,9 +28,13 @@ struct FileCacheData
 	FileCacheData(const FileCacheData& ref) :
 		m_pack(ref.m_pack), m_parent(ref.m_parent), m_name(ref.m_name), m_isFolder(ref.m_isFolder), m_childs(ref.m_childs){}
 
+	FileCacheData(PackFilePtr pack, FileCachePtr parent, FileNameRef name, bool isFolder, const FileCacheChilds& childs) :
+		m_pack(pack), m_parent(parent), m_name(name), m_isFolder(isFolder), m_childs(childs){}
+
 	PackFilePtr	                m_pack;
 	FileCachePtr				m_parent;
 	FileName 		            m_name;
+	FileName                    m_origName;
 	bool	 	                m_isFolder;
 	FileCacheChilds  		    m_childs;
 };
@@ -57,7 +61,7 @@ public:
 	typedef std::shared_ptr<FileCache> Ptr;
 	typedef std::vector<Ptr>           Childs;
 
-	FileCache(const FileCacheData& data, LoadStatus status): FileCacheData(data), m_status(status){}
+	FileCache(const FileCacheData& data, LoadStatus status) : FileCacheData(data), m_status(status), m_autoUpgrade(false){}
 
 	FileName getName(){ ckeckLevel(SratusLoadName); return m_name; }
 	bool     isFolder(){ ckeckLevel(SratusLoadName); return m_isFolder; }
@@ -65,8 +69,8 @@ public:
 	attr::FileAttr& getAttr();
 	FileName getExtractedName();
 
-	void setAutoUpgrade();
-	bool isAutoUpgrade()const;
+	void setAutoUpgrade(bool autoUpgrade){ m_autoUpgrade = autoUpgrade; }
+	bool isAutoUpgrade()const{ return m_autoUpgrade; }
 
 	void markDeleted();
 	bool isDeleted()const;
@@ -74,15 +78,13 @@ public:
 	PackDataReadStream&  getReadDataStream();
 	PackDataWriteStream& getWriteDataStream();
 
-	Childs& getChilds();
+	Childs& getChilds(){ ckeckLevel(StatusLoadStream); return m_childs; }
 	Ptr getParent();
 
-	LoadStatus getStatus()const;
+	LoadStatus getStatus()const{ return m_status; }
 
 protected:
 	void innerUpgrade(LoadStatus status);
-
-
 	void ckeckLevel(LoadStatus status);
 	
 	bool isDirty()const;
@@ -94,6 +96,7 @@ private:
 	const FileCache& operator=(const FileCache&);
 
 	LoadStatus  	m_status;
+	bool            m_autoUpgrade;
 };
 
 

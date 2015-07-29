@@ -33,7 +33,7 @@ public:
 	FileName getTmpFolder()const;
 	FileName getPassword()const;
 	FileCache::Ptr getRoot(){ return m_root; }
-	PackerBasePtr getPacker();
+	PackerBasePtr getPacker(){ return m_packer; }
 private:
 	FileCache::Ptr       m_root;
 	FileName             m_fullName;
