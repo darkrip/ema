@@ -20,9 +20,10 @@ public:
 	virtual ~BaseSharedData(){}
 
 	template<typename T>
-	SDI getSharedDataId()
+	static SDI getSharedDataId()
 	{
-		return (SDI)(void*)&getSharedDataId;
+		auto ptr = static_cast<SDI(*)()>(&BaseSharedData::getSharedDataId<T>);
+		return (SDI)(void*)ptr;
 	}
 };
 
@@ -52,7 +53,7 @@ public:
 private:
 	typedef std::unique_ptr<BaseSharedData> BSD;
 	typedef std::vector<BSD> BSDItems;
-	typedef std::map<BaseSharedData::SDI, BSDItems> SharedData;
+	typedef std::map<BaseSharedData::SDI, BSDItems> SharedDataMap;
 
 	template<typename T>
 	BaseSharedData& getBSD(BaseSharedData::SDI sdi, size_t index)
@@ -69,7 +70,7 @@ private:
 		return *it->second[index].get();
 	}
 
-	SharedData m_data;
+	SharedDataMap m_data;
 };
 
 

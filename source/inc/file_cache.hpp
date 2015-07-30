@@ -2,6 +2,7 @@
 #define __FILE_CACHE_HPP__
 
 #include "file_attr.hpp"
+#include "shared_data.hpp"
 
 #include "defs.hpp"
 #include <vector>
@@ -36,7 +37,9 @@ struct FileCacheData
 	FileName 		            m_name;
 	FileName                    m_origName;
 	bool	 	                m_isFolder;
+	bool                        m_isDeleted;
 	FileCacheChilds  		    m_childs;
+	attr::FileAttr              m_attr;
 };
 
 
@@ -46,7 +49,7 @@ class FileCacheUpgradeExeption : public std::exception
 };
 
 
-class FileCache : private  FileCacheData
+class FileCache : private  FileCacheData, public SharedDataStorage
 {
 public:
 	enum LoadStatus
@@ -73,7 +76,7 @@ public:
 	bool isAutoUpgrade()const{ return m_autoUpgrade; }
 
 	void markDeleted();
-	bool isDeleted()const;
+	bool isDeleted()const{ return m_isDeleted; }
 
 	PackDataReadStream&  getReadDataStream();
 	PackDataWriteStream& getWriteDataStream();
@@ -81,15 +84,18 @@ public:
 	Childs& getChilds(){ ckeckLevel(StatusLoadStream); return m_childs; }
 	Ptr getParent();
 
+	PackFilePtr getPackFile()const{ return m_pack; }
+
 	LoadStatus getStatus()const{ return m_status; }
+
+	bool isDirty()const;
 
 protected:
 	void innerUpgrade(LoadStatus status);
 	void ckeckLevel(LoadStatus status);
+	void setDirty(){ m_dirty = true; }
+	void clearDirty(){ m_dirty = false; }
 	
-	bool isDirty()const;
-	void setDirty();
-	void clearDirty();
 private:
 	FileCache();
 	FileCache(const FileCache&);
@@ -97,6 +103,7 @@ private:
 
 	LoadStatus  	m_status;
 	bool            m_autoUpgrade;
+	mutable bool    m_dirty;
 };
 
 

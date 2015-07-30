@@ -81,6 +81,7 @@ BOOST_VERIFY(m_variableProcessor->registerVar<PackFile>(L"P", boost::bind(&PackF
 
 FileCache::LoadStatus CustomPacker::loadFileName(FileCache& file, FileCacheData& fileData, bool readOnly)
 {
+	//TODO we can't load file afte full unload
 	return FileCache::StatusLoadEmpty;
 		/*		,
 		SratusLoadName, 	// Only Name and IsFolder
@@ -91,6 +92,16 @@ FileCache::LoadStatus CustomPacker::loadFileName(FileCache& file, FileCacheData&
 
 FileCache::LoadStatus CustomPacker::unloadFileName(FileCache& file, FileCacheData& fileData, bool readOnly)
 {
+	if (!readOnly)
+	{
+		if (file.isDeleted())
+			deleteFile(file, fileData);
+		else if (file.isDirty())
+			renameFile(file, fileData);
+	}
+	fileData.m_name.clear();
+	fileData.m_parent.reset();
+
 	return FileCache::StatusLoadEmpty;
 }
 
@@ -106,7 +117,10 @@ FileCache::LoadStatus CustomPacker::unloadFileAttr(FileCache& file, FileCacheDat
 
 FileCache::LoadStatus CustomPacker::loadFileStream(FileCache& file, FileCacheData& fileData, bool readOnly)
 {
-	return FileCache::StatusLoadEmpty;
+	if (file.isFolder())
+		return loadDirContent(file, fileData);
+	else
+		return loadFileToTmp(file, fileData, readOnly);
 }
 
 FileCache::LoadStatus CustomPacker::unloadFileStream(FileCache& file, FileCacheData& fileData, bool readOnly)
@@ -124,6 +138,32 @@ FileCache::LoadStatus CustomPacker::unloadFileFromTmp(FileCache& file, FileCache
 	return FileCache::StatusLoadEmpty;
 }
 
+
+
+FileCache::LoadStatus CustomPacker::deleteFile(FileCache& file, FileCacheData& fileData)
+{
+	if (!isImplemented(ciMove))
+		throw CustomPackerOperationNotImplemented(ciMove, getSelf().lock(), file.getPackFile());
+
+	//TODO
+	FileName fileName = fileData.m_origName;
+
+	var::ContextBase::Ptr context = var::Context::create(file.getSharedData<var::ContextBase::Ptr>())
+		<< var::Context::Var(L"A", [fileName]()->String{ return fileName; })
+		<< var::Context::Var(L"a", boost::bind(&hd::tools::shortPathCreator, fileName));
+
+	return FileCache::StatusLoadEmpty;
+}
+
+FileCache::LoadStatus CustomPacker::renameFile(FileCache& file, FileCacheData& fileData)
+{
+	return FileCache::StatusLoadEmpty;
+}
+
+FileCache::LoadStatus CustomPacker::loadDirContent(FileCache& file, FileCacheData& fileData)
+{
+	return FileCache::StatusLoadEmpty;
+}
 
 
 

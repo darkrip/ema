@@ -45,8 +45,8 @@
     <LibraryPath>$(SolutionDir)..\..\source\external\boost\stage\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\output\tests</OutDir>
-    <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2013</IntDir>
+    <OutDir>$(SolutionDir)..\..\output\tests\</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\$(ProjectName).$(Configuration).$(Platform).vs2013\</IntDir>
     <IncludePath>$(SolutionDir)..\..\source\inc;$(SolutionDir)..\..\source\external\darktools\inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

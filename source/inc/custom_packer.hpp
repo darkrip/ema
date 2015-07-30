@@ -40,13 +40,22 @@ public:
 
 
 protected:
+
 	CustomPacker(StringRef packerName);
 	void init(const LPtr& self);
+
+	FileCache::LoadStatus deleteFile(FileCache& file, FileCacheData& fileData);
+	FileCache::LoadStatus renameFile(FileCache& file, FileCacheData& fileData);
+	FileCache::LoadStatus loadDirContent(FileCache& file, FileCacheData& fileData);
 private:
 	friend class CustomPackerFactoryBase;
-	enum CommandsId{ ciEmpty=0, ciIsArchive, ciList, ciExtract, ciExtractWithoutPath, ciTest, ciDelete, ciAdd, ciMove, ciLastCommand };
+	friend class CustomPackerOperationNotImplemented;
+
+	enum CommandsId{ ciEmpty = 0, ciIsArchive, ciList, ciExtract, ciExtractWithoutPath, ciTest, ciDelete, ciAdd, ciMove, ciLastCommand };
+
 
 	void initVariables();
+	bool isImplemented(CommandsId);
 	int runCommand(CommandsId, var::ContextBase&, console::ConsoleCommandHandler& handler=console::EmptyHandler());
 	var::ContextBase::Ptr& getContext(){ return m_context; }
 
@@ -87,6 +96,13 @@ private:
 	var::ContextBase::Ptr m_context;
 	CacheController       m_cacheController;
 	PackerStatusChain     m_statusChain;
+};
+
+
+class CustomPackerOperationNotImplemented : public std::exception
+{
+public:
+	CustomPackerOperationNotImplemented(CustomPacker::CommandsId, PackerBase::Ptr packer, PackFile::Ptr pack);
 };
 
 

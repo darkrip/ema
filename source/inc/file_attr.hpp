@@ -162,7 +162,9 @@ public:
 		return AttrData<DataTypeId>(index);
 	}	
 
-
+	bool isEmpty()const;
+	bool isDirty()const;
+	void clearDirty();
 };
 
 
